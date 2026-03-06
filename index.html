@@ -266,19 +266,19 @@
             table-layout: fixed;
         }
 
-        .compare-table th {
-            background-color: #f1f5f9;
-            /* var(--page-bg) usually, but solid needed */
-            color: var(--primary);
-            padding: 20px 16px;
-            text-align: center;
-            border: 1px solid var(--border-color);
-            font-weight: 800;
-            font-size: 1.1rem;
+        .compare-table thead tr:nth-child(1) th {
             position: sticky;
             top: 0;
+            z-index: 101;
+            background-color: #f1f5f9;
+        }
+
+        .compare-table thead tr:nth-child(2) th {
+            position: sticky;
+            top: 64px;
+            /* Approximate height of first header row */
             z-index: 100;
-            /* Priority over scrolling rows */
+            background-color: #f8fafc;
         }
 
         .compare-table th:first-child {
@@ -286,7 +286,6 @@
             text-align: left;
             left: 0;
             z-index: 110;
-            /* Priority over header top-level */
         }
 
         .compare-table td {
