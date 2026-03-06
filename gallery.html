@@ -999,7 +999,7 @@
                             let note = lines.join('\n').trim();
 
                             // Detect long text in score bubble
-                            let isLong = score.length > 8 || /[^\d\-\.]/.test(score);
+                            let isLong = score.length > 8 || /[^\d\-\.\,]/.test(score) || score.includes('萬') || score.includes('TWD');
                             let longClass = isLong ? 'long-text' : '';
 
                             let html = `<div class="score-val ${longClass}" ${getScoreStyle(score)}>${score}</div>`;
