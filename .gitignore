@@ -1,0 +1,7 @@
+# Ignore all files
+*
+# Except for these
+!gallery.html
+!index.html
+!AI示意圖.jpg
+!.gitignore
