@@ -397,13 +397,15 @@
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 20px;
-            padding: 32px 32px;
-            flex-grow: 1;
+            padding: 24px 32px 20px 32px;
             box-shadow: 0 10px 30px rgba(10, 37, 64, 0.05);
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            justify-content: flex-start;
+            gap: 12px;
             overflow-y: auto;
+            flex-grow: 1;
+            /* Stretch to fill container height */
             position: relative;
             scrollbar-width: none;
             /* Hide internal scroll if possible */
@@ -473,7 +475,6 @@
         }
 
         .card-content-area {
-            flex-grow: 1;
             display: flex;
             flex-direction: column;
         }
@@ -512,8 +513,8 @@
         .data-row {
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            padding: 12px 0;
+            gap: 2px;
+            padding: 10px 0;
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -558,8 +559,10 @@
         /* Annotation footer styling */
         .card-footer {
             margin-top: auto;
-            /* Pushes footer to the bottom */
-            padding-top: 20px;
+            padding-top: 12px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
 
         /* Mobile Responsive Overrides */
@@ -727,6 +730,8 @@
             line-height: 1.6;
             min-height: 100px;
             white-space: pre-wrap;
+            flex-grow: 1;
+            /* Stretch to fill footer */
         }
 
         .card-annotation:focus {
@@ -1440,14 +1445,18 @@
                 coverTitle = type.toUpperCase() + ' 導入流程';
                 coverSubtitle = '全面數位化升級<br>建構企業專屬知識庫';
             }
-            const noteIndex = headers.indexOf('備註');
+
+            // Robust header indexing
+            const noteIndex = headers.findIndex(h => h && h.trim().startsWith('備註'));
+            const oldTimeIndex = headers.findIndex(h => h && h.includes('原始工時'));
+            const newTimeIndex = headers.findIndex(h => h && h.includes('預估工時'));
+
             let coverNote = ''; // Default fallback
             rows.forEach((r) => {
-                if (r[0] && r[0].trim() === '封面備註') {
-                    // Try to find it at noteIndex, or if it's placed earlier because of empty columns
+                if (r[0] && r[0].includes('封面備註')) {
                     let val = null;
                     if (noteIndex !== -1 && r[noteIndex]) val = r[noteIndex];
-                    else if (r.length === 2 && r[1]) val = r[1]; // if they just put it in the second column
+                    else if (r.length === 2 && r[1]) val = r[1];
                     else if (r.length > 1) {
                         for (let j = r.length - 1; j > 0; j--) {
                             if (r[j] && r[j].trim() !== '') {
@@ -1467,8 +1476,9 @@
             if (type !== 'database') {
                 let totalOld = 0, totalNew = 0, totalOldNoEst = 0, totalNewNoEst = 0;
                 rows.forEach((r) => {
-                    if (!r[0] || r[0].trim() === '' || r[0].trim() === '封面備註') return;
-                    const o = parseFloat(r[headers.indexOf('原始工時')] || '0'), n = parseFloat(r[headers.indexOf('預估工時')] || '0');
+                    if (!r[0] || r[0].trim() === '' || r[0].includes('封面備註')) return;
+                    const o = parseFloat(r[oldTimeIndex !== -1 ? oldTimeIndex : -1] || '0');
+                    const n = parseFloat(r[newTimeIndex !== -1 ? newTimeIndex : -1] || '0');
                     totalOld += o;
                     totalNew += n;
                     if (!r[0].includes('成本估價')) { totalOldNoEst += o; totalNewNoEst += n; }
@@ -1502,7 +1512,7 @@
             dotsContainer.appendChild(dotCover);
 
             rows.forEach((row, index) => {
-                if (!row[0] || row[0].trim() === '') return;
+                if (!row[0] || row[0].trim() === '' || row[0].includes('封面備註')) return;
 
                 const title = row[0];
                 let cardInnerHTML = '';
@@ -1512,9 +1522,8 @@
                     const listItems = listItemsText.split('|').filter(s => s.trim().length > 0);
                     const ulHTML = listItems.map(item => '<li>' + formatInternalTag(item.trim()) + '</li>').join('');
 
-                    const annotationIdx = headers.indexOf('備註');
-                    let annotation = (annotationIdx !== -1 && row[annotationIdx]) ? row[annotationIdx] : '備註：此區塊為企業內部知識核心，需定期排程更新，以確保 AI 檢索模型之準確度。';
-                    annotation = annotation.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    let annotation = (noteIndex !== -1 && row[noteIndex]) ? row[noteIndex].trim() : '';
+                    if (annotation) annotation = annotation.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
                     cardInnerHTML =
                         '<div class="card-header">' +
@@ -1524,13 +1533,17 @@
                         '<ul class="data-list">' +
                         ulHTML +
                         '</ul>' +
-                        '</div>' +
-                        '<div class="card-footer">' +
-                        '<div class="card-annotation" contenteditable="true">' + annotation + '</div>' +
                         '</div>';
+
+                    if (annotation) {
+                        cardInnerHTML +=
+                            '<div class="card-footer">' +
+                            '<div class="card-annotation" contenteditable="true">' + annotation + '</div>' +
+                            '</div>';
+                    }
                 } else {
-                    const timeOld = parseFloat(row[headers.indexOf('原始工時')] || '0');
-                    const timeNew = parseFloat(row[headers.indexOf('預估工時')] || '0');
+                    const timeOld = parseFloat(row[oldTimeIndex !== -1 ? oldTimeIndex : -1] || '0');
+                    const timeNew = parseFloat(row[newTimeIndex !== -1 ? newTimeIndex : -1] || '0');
                     const diff = timeOld - timeNew;
                     const diffPercent = timeOld !== 0 ? Math.round((diff / timeOld) * 100) : 0;
 
@@ -1541,8 +1554,10 @@
 
                     for (let i = 1; i < headers.length; i++) {
                         const h = headers[i];
-                        // Skip system columns or empty header tags completely
-                        if (!h || h.trim() === '' || h === '階段名稱' || h === '原始工時' || h === '預估工時' || h === '備註' || h === '封面備註') continue;
+                        if (!h || h.trim() === '') continue;
+
+                        // Robust skip
+                        if (h.includes('階段名稱') || h.includes('原始工時') || h.includes('預估工時') || h.includes('備註') || h.includes('封面備註')) continue;
 
                         let val = row[i];
                         let valClass = 'row-value';
@@ -1565,16 +1580,17 @@
                             '</div>';
                     }
 
-                    const annotationIdx = headers.indexOf('備註');
-                    let annotation = (annotationIdx !== -1 && row[annotationIdx]) ? row[annotationIdx].trim() : '';
+                    let annotation = (noteIndex !== -1 && row[noteIndex]) ? row[noteIndex].trim() : '';
                     annotation = annotation.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
                     cardInnerHTML =
-                        '<div class="card-badge">' + badge + '</div>' + // Extracted from header to avoid flex flow disruption
-                        '<div class="card-header">' +
-                        '<h3 class="card-title">' + title + '</h3>' +
+                        '<div class="card-badge">' + badge + '</div>' +
+                        '<div style="display:flex; flex-direction:column; gap:4px; margin-bottom: 2px;">' +
+                        '<div class="card-header" style="border-bottom: 2px solid var(--page-bg); padding-bottom: 4px;">' +
+                        '<h3 class="card-title" style="font-size: 2rem;">' + title + '</h3>' +
                         '</div>' +
-                        '<p class="card-desc">' + descHTML + '</p>' +
+                        '<p class="card-desc" style="margin: 0; font-size: 0.95rem;">' + descHTML + '</p>' +
+                        '</div>' +
                         '<div class="card-content-area">' +
                         dataRowsHTML +
                         '</div>';
