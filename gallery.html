@@ -935,7 +935,8 @@
                     // Build Body dynamically
                     const getScoreStyle = (s) => {
                         let val = s.trim();
-                        if (val.includes('10平台') || val === '10' || val === '10 (滿分)' || val.startsWith('10')) {
+                        // Only highlight literal 10 scores
+                        if (val === '10' || val === '10 (滿分)') {
                             return 'style="color:#10b981;border-color:#a7f3d0;background:#ecfdf5"';
                         } else if (val === '0' || val === '-' || val === '0分' || val === '') {
                             return 'style="color:var(--txt-light);border-color:#e2e8f0;background:#f8fafc"';
