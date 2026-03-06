@@ -917,59 +917,49 @@
                 }
 
                 // Populate Comparison Modal
-                if (store.comparison && store.comparison.length > 1) {
-                    const compRows = store.comparison.slice(1);
-                    const aiTypes = [];
-                    const metrics = [];
-                    const matrix = {};
-                    const aiDesc = {};
-
-                    compRows.forEach(r => {
-                        const type = r[0];
-                        const desc = r[1];
-                        const metric = r[2];
-                        const score = r[3] || '0';
-                        const note = r[4] || '';
-
-                        if (!type || !metric) return;
-
-                        if (!aiTypes.includes(type)) { aiTypes.push(type); aiDesc[type] = desc; }
-                        if (!metrics.includes(metric)) metrics.push(metric);
-
-                        if (!matrix[metric]) matrix[metric] = {};
-                        matrix[metric][type] = { score, note };
-                    });
+                if (store.comparison && store.comparison.length > 2) {
+                    const compRows = store.comparison;
+                    const headers = compRows[0]; // ["評估項目", "外部 AI", "地端 / 內部 AI", "專用分析型 AI"]
+                    const subtitles = compRows[1]; // ["簡介", "雲端 API 模型", ...]
+                    const dataRows = compRows.slice(2);
 
                     // Build Header dynamically
-                    const theadHTML = `
-                        <tr>
-                            <th>評估項目</th>
-                            ${aiTypes.map(t => `<th>${t}<br><span style="font-size:0.9rem;font-weight:600;color:var(--secondary)">${aiDesc[t] || ''}</span></th>`).join('')}
-                        </tr>
-                    `;
+                    let theadHTML = '<tr><th>' + (headers[0] || '評估項目') + '</th>';
+                    for (let i = 1; i < headers.length; i++) {
+                        let type = headers[i] || '';
+                        let sub = subtitles[i] || '';
+                        theadHTML += `<th>${type}<br><span style="font-size:0.9rem;font-weight:600;color:var(--secondary)">${sub}</span></th>`;
+                    }
+                    theadHTML += '</tr>';
 
                     // Build Body dynamically
-                    const tbodyHTML = metrics.map(metric => {
-                        const rowHtml = aiTypes.map(t => {
-                            const data = matrix[metric][t] || { score: '0', note: '' };
-                            let score = (data.score === '') ? '0' : data.score;
-                            const note = data.note;
+                    const getScoreStyle = (s) => {
+                        let val = s.trim();
+                        if (val.includes('10平台') || val === '10' || val === '10 (滿分)' || val.startsWith('10')) {
+                            return 'style="color:#10b981;border-color:#a7f3d0;background:#ecfdf5"';
+                        } else if (val === '0' || val === '-' || val === '0分' || val === '') {
+                            return 'style="color:var(--txt-light);border-color:#e2e8f0;background:#f8fafc"';
+                        }
+                        return '';
+                    };
 
-                            const getScoreStyle = (s) => {
-                                if (s.includes('10平台') || s.includes('10\n') || s === '10' || s === '10 (滿分)' || s.startsWith('10')) {
-                                    return 'style="color:#10b981;border-color:#a7f3d0;background:#ecfdf5"';
-                                } else if (s === '0' || s === '-' || s === '0分' || s === '') {
-                                    return 'style="color:var(--txt-light);border-color:#e2e8f0;background:#f8fafc"';
-                                }
-                                return '';
-                            };
+                    const tbodyHTML = dataRows.map(row => {
+                        if (!row[0]) return '';
+                        let metric = row[0];
 
-                            let html = `<div class="score-val" ${getScoreStyle(score)}>${score.replace(/\n(.*)/, '<br><span style="font-size:0.8rem;opacity:0.8">$1</span>')}</div>`;
-                            if (note && note !== '-' && note.trim() !== '') {
+                        let rowHtml = '';
+                        for (let i = 1; i < headers.length; i++) {
+                            let cellData = row[i] || '';
+                            let lines = cellData.split('\n');
+                            let score = lines.shift() || '0';
+                            let note = lines.join('\n').trim();
+
+                            let html = `<div class="score-val" ${getScoreStyle(score)}>${score}</div>`;
+                            if (note && note !== '-' && note !== '') {
                                 html += `<div class="table-note">${note.replace(/\n/g, '<br>')}</div>`;
                             }
-                            return `<td>${html}</td>`;
-                        }).join('');
+                            rowHtml += `<td>${html}</td>`;
+                        }
 
                         return `<tr>
                             <td class="row-label">${metric}</td>
