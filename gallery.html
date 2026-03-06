@@ -267,7 +267,8 @@
         }
 
         .compare-table th {
-            background: var(--page-bg);
+            background-color: #f1f5f9;
+            /* var(--page-bg) usually, but solid needed */
             color: var(--primary);
             padding: 20px 16px;
             text-align: center;
@@ -276,14 +277,16 @@
             font-size: 1.1rem;
             position: sticky;
             top: 0;
-            z-index: 10;
+            z-index: 100;
+            /* Priority over scrolling rows */
         }
 
         .compare-table th:first-child {
             width: 14%;
             text-align: left;
             left: 0;
-            z-index: 20;
+            z-index: 110;
+            /* Priority over header top-level */
         }
 
         .compare-table td {
@@ -297,12 +300,14 @@
         .compare-table td.row-label {
             font-weight: 700;
             color: var(--primary);
-            background: #F8FAFC;
+            background-color: #F8FAFC;
             vertical-align: middle;
             text-align: left;
             position: sticky;
             left: 0;
-            z-index: 5;
+            z-index: 90;
+            /* Priority over cell content */
+            border-right: 2px solid var(--border-color);
         }
 
         .score-val {
