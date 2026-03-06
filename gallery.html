@@ -562,7 +562,6 @@
             padding-top: 12px;
             display: flex;
             flex-direction: column;
-            flex-grow: 1;
         }
 
         /* Mobile Responsive Overrides */
@@ -728,7 +727,8 @@
             color: var(--txt-light);
             border-radius: 4px;
             line-height: 1.6;
-            min-height: 100px;
+            height: 160px; /* Fixed height for roughly 4 lines */
+            overflow-y: auto;
             white-space: pre-wrap;
             flex-grow: 1;
             /* Stretch to fill footer */

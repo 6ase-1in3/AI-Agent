@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI 導入情況 Gallery</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/css/shepherd.css" />
     <style>
         :root {
             /* Palette 05 Trust Navy (Corporate/B2B) */
@@ -396,13 +397,15 @@
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 20px;
-            padding: 32px 32px;
-            flex-grow: 1;
+            padding: 24px 32px 20px 32px;
             box-shadow: 0 10px 30px rgba(10, 37, 64, 0.05);
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            justify-content: flex-start;
+            gap: 12px;
             overflow-y: auto;
+            flex-grow: 1;
+            /* Stretch to fill container height */
             position: relative;
             scrollbar-width: none;
             /* Hide internal scroll if possible */
@@ -472,7 +475,6 @@
         }
 
         .card-content-area {
-            flex-grow: 1;
             display: flex;
             flex-direction: column;
         }
@@ -511,8 +513,8 @@
         .data-row {
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            padding: 12px 0;
+            gap: 2px;
+            padding: 10px 0;
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -557,8 +559,9 @@
         /* Annotation footer styling */
         .card-footer {
             margin-top: auto;
-            /* Pushes footer to the bottom */
-            padding-top: 20px;
+            padding-top: 12px;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Mobile Responsive Overrides */
@@ -695,6 +698,25 @@
                 min-width: 32px;
                 min-height: 32px;
             }
+
+            /* Responsive overrides for Shepherd Tour */
+            .shepherd-element {
+                max-width: 90vw !important;
+                margin: 4px !important;
+            }
+
+            .shepherd-text {
+                font-size: 0.95rem !important;
+                padding: 12px 16px 16px !important;
+            }
+
+            .shepherd-header {
+                padding: 16px 16px 0 !important;
+            }
+
+            .shepherd-footer {
+                padding: 0 16px 16px !important;
+            }
         }
 
         .card-annotation {
@@ -705,7 +727,8 @@
             color: var(--txt-light);
             border-radius: 4px;
             line-height: 1.6;
-            min-height: 100px;
+            height: 160px; /* Fixed height for roughly 4 lines */
+            overflow-y: auto;
             white-space: pre-wrap;
         }
 
@@ -799,6 +822,99 @@
             border: 1px solid var(--border-color);
         }
 
+        /* --- Shepherd.js Custom Theme --- */
+        .shepherd-element {
+            background: #FFFFFF !important;
+            border-radius: 16px !important;
+            box-shadow: 0 20px 40px rgba(10, 37, 64, 0.15), 0 0 0 1px rgba(10, 37, 64, 0.05) !important;
+            border: none !important;
+            font-family: inherit !important;
+            max-width: 400px !important;
+            z-index: 10000 !important;
+            margin: 16px !important;
+            /* Added gap to prevent sticking */
+        }
+
+        .shepherd-header {
+            background: transparent !important;
+            padding: 24px 24px 0 !important;
+            border: none !important;
+            align-items: center !important;
+        }
+
+        .shepherd-title {
+            font-size: 1.3rem !important;
+            color: var(--primary) !important;
+            font-weight: 800 !important;
+            margin: 0 !important;
+        }
+
+        .shepherd-cancel-icon {
+            color: var(--txt-light) !important;
+            transition: all 0.2s !important;
+            margin-top: -4px !important;
+        }
+
+        .shepherd-cancel-icon:hover {
+            color: var(--primary) !important;
+            background: var(--page-bg) !important;
+            border-radius: 6px !important;
+        }
+
+        .shepherd-text {
+            padding: 16px 24px 24px !important;
+            font-size: 1.05rem !important;
+            color: var(--txt-body) !important;
+            line-height: 1.6 !important;
+        }
+
+        .shepherd-footer {
+            padding: 0 24px 24px !important;
+            background: transparent !important;
+            border: none !important;
+        }
+
+        .shepherd-button {
+            background: var(--primary) !important;
+            color: #FFFFFF !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 10px 20px !important;
+            font-size: 1rem !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            margin-left: 12px !important;
+        }
+
+        .shepherd-button:hover {
+            background: #1e3a5f !important;
+            box-shadow: 0 4px 12px rgba(10, 37, 64, 0.2) !important;
+            transform: translateY(-1px) !important;
+        }
+
+        .shepherd-button-secondary {
+            background: #FFFFFF !important;
+            color: var(--secondary) !important;
+            border: 2px solid var(--border-color) !important;
+            padding: 8px 18px !important;
+        }
+
+        .shepherd-button-secondary:hover {
+            background: var(--bg-hover) !important;
+            border-color: #CCD6E0 !important;
+            color: var(--primary) !important;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+
+        .shepherd-arrow:before {
+            background: #FFFFFF !important;
+            border: 1px solid rgba(10, 37, 64, 0.05) !important;
+        }
+
+        /* ---------------------------------- */
+
         /* Dot Navigation styling — Apple pill style */
         .dots-container {
             display: flex;
@@ -879,6 +995,8 @@
         <div class="header">
             <h1>企業 AI 導入與流程數位化評估</h1>
             <div class="controls">
+                <button class="glossary-btn" onclick="startTour()" title="開始導覽"
+                    style="width: auto; padding: 8px 16px; border-radius: 8px; font-weight: 600;">使用教學</button>
                 <button id="btn-schema" class="active" onclick="switchView('schema')">架構：AI 作業模式</button>
                 <button id="btn-database" onclick="switchView('database')">資源層：資料庫</button>
                 <button id="btn-oem" onclick="switchView('oem')">流程層：OEM</button>
@@ -982,6 +1100,12 @@
             odm: []
         };
 
+        // --- Configuration ---
+        window.GalleryConfig = {
+            sheetId: '1XjGLoTWC2B1HadQhG_I7DLmxmjnxIC1UMgW1uj9pLhE'
+        };
+        // ---------------------
+
         function parseCSV(text) {
             const rows = [];
             let currentRow = [];
@@ -1031,7 +1155,7 @@
 
         async function init() {
             try {
-                const sheetId = '1XjGLoTWC2B1HadQhG_I7DLmxmjnxIC1UMgW1uj9pLhE';
+                const sheetId = window.GalleryConfig.sheetId;
                 const baseUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
                 const cacheBuster = "&t=" + new Date().getTime();
 
@@ -1319,14 +1443,18 @@
                 coverTitle = type.toUpperCase() + ' 導入流程';
                 coverSubtitle = '全面數位化升級<br>建構企業專屬知識庫';
             }
-            const noteIndex = headers.indexOf('備註');
+
+            // Robust header indexing
+            const noteIndex = headers.findIndex(h => h && h.trim().startsWith('備註'));
+            const oldTimeIndex = headers.findIndex(h => h && h.includes('原始工時'));
+            const newTimeIndex = headers.findIndex(h => h && h.includes('預估工時'));
+
             let coverNote = ''; // Default fallback
             rows.forEach((r) => {
-                if (r[0] && r[0].trim() === '封面備註') {
-                    // Try to find it at noteIndex, or if it's placed earlier because of empty columns
+                if (r[0] && r[0].includes('封面備註')) {
                     let val = null;
                     if (noteIndex !== -1 && r[noteIndex]) val = r[noteIndex];
-                    else if (r.length === 2 && r[1]) val = r[1]; // if they just put it in the second column
+                    else if (r.length === 2 && r[1]) val = r[1];
                     else if (r.length > 1) {
                         for (let j = r.length - 1; j > 0; j--) {
                             if (r[j] && r[j].trim() !== '') {
@@ -1346,8 +1474,9 @@
             if (type !== 'database') {
                 let totalOld = 0, totalNew = 0, totalOldNoEst = 0, totalNewNoEst = 0;
                 rows.forEach((r) => {
-                    if (!r[0] || r[0].trim() === '' || r[0].trim() === '封面備註') return;
-                    const o = parseFloat(r[headers.indexOf('原始工時')] || '0'), n = parseFloat(r[headers.indexOf('預估工時')] || '0');
+                    if (!r[0] || r[0].trim() === '' || r[0].includes('封面備註')) return;
+                    const o = parseFloat(r[oldTimeIndex !== -1 ? oldTimeIndex : -1] || '0');
+                    const n = parseFloat(r[newTimeIndex !== -1 ? newTimeIndex : -1] || '0');
                     totalOld += o;
                     totalNew += n;
                     if (!r[0].includes('成本估價')) { totalOldNoEst += o; totalNewNoEst += n; }
@@ -1381,7 +1510,7 @@
             dotsContainer.appendChild(dotCover);
 
             rows.forEach((row, index) => {
-                if (!row[0] || row[0].trim() === '') return;
+                if (!row[0] || row[0].trim() === '' || row[0].includes('封面備註')) return;
 
                 const title = row[0];
                 let cardInnerHTML = '';
@@ -1391,9 +1520,8 @@
                     const listItems = listItemsText.split('|').filter(s => s.trim().length > 0);
                     const ulHTML = listItems.map(item => '<li>' + formatInternalTag(item.trim()) + '</li>').join('');
 
-                    const annotationIdx = headers.indexOf('備註');
-                    let annotation = (annotationIdx !== -1 && row[annotationIdx]) ? row[annotationIdx] : '備註：此區塊為企業內部知識核心，需定期排程更新，以確保 AI 檢索模型之準確度。';
-                    annotation = annotation.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    let annotation = (noteIndex !== -1 && row[noteIndex]) ? row[noteIndex].trim() : '';
+                    if (annotation) annotation = annotation.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
                     cardInnerHTML =
                         '<div class="card-header">' +
@@ -1403,13 +1531,17 @@
                         '<ul class="data-list">' +
                         ulHTML +
                         '</ul>' +
-                        '</div>' +
-                        '<div class="card-footer">' +
-                        '<div class="card-annotation" contenteditable="true">' + annotation + '</div>' +
                         '</div>';
+
+                    if (annotation) {
+                        cardInnerHTML +=
+                            '<div class="card-footer">' +
+                            '<div class="card-annotation" contenteditable="true">' + annotation + '</div>' +
+                            '</div>';
+                    }
                 } else {
-                    const timeOld = parseFloat(row[headers.indexOf('原始工時')] || '0');
-                    const timeNew = parseFloat(row[headers.indexOf('預估工時')] || '0');
+                    const timeOld = parseFloat(row[oldTimeIndex !== -1 ? oldTimeIndex : -1] || '0');
+                    const timeNew = parseFloat(row[newTimeIndex !== -1 ? newTimeIndex : -1] || '0');
                     const diff = timeOld - timeNew;
                     const diffPercent = timeOld !== 0 ? Math.round((diff / timeOld) * 100) : 0;
 
@@ -1420,8 +1552,10 @@
 
                     for (let i = 1; i < headers.length; i++) {
                         const h = headers[i];
-                        // Skip system columns or empty header tags completely
-                        if (!h || h.trim() === '' || h === '階段名稱' || h === '原始工時' || h === '預估工時' || h === '備註' || h === '封面備註') continue;
+                        if (!h || h.trim() === '') continue;
+
+                        // Robust skip
+                        if (h.includes('階段名稱') || h.includes('原始工時') || h.includes('預估工時') || h.includes('備註') || h.includes('封面備註')) continue;
 
                         let val = row[i];
                         let valClass = 'row-value';
@@ -1444,16 +1578,17 @@
                             '</div>';
                     }
 
-                    const annotationIdx = headers.indexOf('備註');
-                    let annotation = (annotationIdx !== -1 && row[annotationIdx]) ? row[annotationIdx].trim() : '';
+                    let annotation = (noteIndex !== -1 && row[noteIndex]) ? row[noteIndex].trim() : '';
                     annotation = annotation.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
                     cardInnerHTML =
-                        '<div class="card-badge">' + badge + '</div>' + // Extracted from header to avoid flex flow disruption
-                        '<div class="card-header">' +
-                        '<h3 class="card-title">' + title + '</h3>' +
+                        '<div class="card-badge">' + badge + '</div>' +
+                        '<div style="display:flex; flex-direction:column; gap:4px; margin-bottom: 2px;">' +
+                        '<div class="card-header" style="border-bottom: 2px solid var(--page-bg); padding-bottom: 4px;">' +
+                        '<h3 class="card-title" style="font-size: 2rem;">' + title + '</h3>' +
                         '</div>' +
-                        '<p class="card-desc">' + descHTML + '</p>' +
+                        '<p class="card-desc" style="margin: 0; font-size: 0.95rem;">' + descHTML + '</p>' +
+                        '</div>' +
                         '<div class="card-content-area">' +
                         dataRowsHTML +
                         '</div>';
@@ -1589,7 +1724,67 @@
             initGlobalScrollEvents();
             init();
         });
+
+        // --- Shepherd.js Guided Tour ---
+        function startTour() {
+            const tour = new Shepherd.Tour({
+                useModalOverlay: true,
+                defaultStepOptions: {
+                    cancelIcon: {
+                        enabled: true
+                    },
+                    classes: 'shadow-md bg-purple-dark',
+                    scrollTo: { behavior: 'smooth', block: 'center' }
+                }
+            });
+
+            tour.addStep({
+                title: '歡迎來到 AI 導入情況展示',
+                text: '這是一個無後端的純展示框架。讓我們快速了解一下這個系統的操作方式。',
+                attachTo: { element: '.header h1', on: 'bottom' },
+                buttons: [
+                    { action: tour.next, text: '下一步' }
+                ],
+                id: 'welcome'
+            });
+
+            tour.addStep({
+                title: '切換視角 (維度)',
+                text: '你可以點擊這裡，隨時在【架構(模式)】、【資料庫(來源)】、以及【OEM/ODM】流程間切換。',
+                attachTo: { element: '.controls', on: 'bottom' },
+                buttons: [
+                    { action: tour.back, classes: 'shepherd-button-secondary', text: '上一步' },
+                    { action: tour.next, text: '下一步' }
+                ],
+                id: 'views'
+            });
+
+            tour.addStep({
+                title: '名詞解釋',
+                text: '遇到看不懂的 AI 黑話嗎？點擊右邊的 [?] 可以開啟名詞解釋面板。',
+                attachTo: { element: 'button[title="名詞解釋"]', on: 'left' },
+                buttons: [
+                    { action: tour.back, classes: 'shepherd-button-secondary', text: '上一步' },
+                    { action: tour.next, text: '下一步' }
+                ],
+                id: 'glossary'
+            });
+
+            tour.addStep({
+                title: '開始探索',
+                text: '現在，請使用【滑鼠滾輪】或點擊【下方圓點】來在卡片之間穿梭吧！',
+                attachTo: { element: '.gallery-wrapper', on: 'top' },
+                buttons: [
+                    { action: tour.back, classes: 'shepherd-button-secondary', text: '上一步' },
+                    { action: tour.complete, text: '完成導覽' }
+                ],
+                id: 'enjoy'
+            });
+
+            tour.start();
+        }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/js/shepherd.min.js"></script>
 </body>
 
 </html>
