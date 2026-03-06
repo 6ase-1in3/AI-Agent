@@ -1204,14 +1204,21 @@
                 coverSubtitle = '全面數位化升級<br>建構企業專屬知識庫';
             }
             const noteIndex = headers.indexOf('備註');
-            let coverNote = '備註：本流程依 ISO 42001 (AIMS) 架構設計，AI 代理人定位為「數據搬運工」(OEM) 或「深度研究助理」(ODM)。所有外部模型呼叫須經企業 API Gateway 統一授權，產出結果附帶 ADR 決策記錄以確保審計可追溯性。成本相關階段採 Human-on-the-loop 模式，高敏感數據依 STRIDE 模型實施存取控制。'; // Default fallback
+            let coverNote = ''; // Default fallback
             rows.forEach((r) => {
                 if (r[0] && r[0].trim() === '封面備註') {
                     // Try to find it at noteIndex, or if it's placed earlier because of empty columns
                     let val = null;
                     if (noteIndex !== -1 && r[noteIndex]) val = r[noteIndex];
                     else if (r.length === 2 && r[1]) val = r[1]; // if they just put it in the second column
-                    else if (r[r.length - 1]) val = r[r.length - 1]; // or the very last available column
+                    else if (r.length > 1) {
+                        for (let j = r.length - 1; j > 0; j--) {
+                            if (r[j] && r[j].trim() !== '') {
+                                val = r[j];
+                                break;
+                            }
+                        }
+                    }
 
                     if (val) coverNote = val.trim();
                 }
@@ -1238,7 +1245,7 @@
                         <div style="margin-bottom:4px;"><span style="font-size:2.8rem;font-weight:800;color:#fff;">${tO}h</span><span style="font-size:1.8rem;color:#94a3b8;margin:0 8px;">➜</span><span style="font-size:2.8rem;font-weight:800;color:#34d399;">${tN}h</span><span style="margin-left:12px;font-size:1.2rem;color:#34d399;font-weight:700;">(↓ ${pc}%)</span></div>
                         <div style="margin:8px 0;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><span style="font-size:0.9rem;color:#f9a8a8;width:50px;">原始</span><div style="flex:1;height:16px;background:rgba(248,113,113,0.5);border-radius:6px;"></div><span style="font-size:0.9rem;color:#fca5a5;width:50px;text-align:right;">${tO}h</span></div><div style="display:flex;align-items:center;gap:10px;"><span style="font-size:0.9rem;color:#6ee7b7;width:50px;">預估</span><div style="flex:1;max-width:${np}%;height:16px;background:rgba(52,211,153,0.7);border-radius:6px;transition:max-width 0.5s;"></div><span style="font-size:0.9rem;color:#6ee7b7;width:50px;text-align:right;">${tN}h</span></div></div>
                         <div style="color:#e2e8f0;font-size:1.15rem;line-height:1.6;"><p style="margin:0 0 4px 0;">節省工時：<strong style="color:#34d399;">${sv}h</strong></p><p style="margin:0;">效率提升：<strong style="color:#34d399;">${pc}%</strong></p></div>
-                        <div style="margin-top:auto;border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;margin-top:20px;"><div style="font-size:0.9rem;color:#94a3b8;min-height:120px;background:rgba(255,255,255,0.05);border-radius:6px;padding:12px;white-space:pre-wrap;">${formatInternalTag(coverNote)}</div></div>
+                        ${coverNote ? `<div style="margin-top:auto;border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;margin-top:20px;"><div style="font-size:0.9rem;color:#94a3b8;min-height:120px;background:rgba(255,255,255,0.05);border-radius:6px;padding:12px;white-space:pre-wrap;">${formatInternalTag(coverNote)}</div></div>` : ''}
                     </div>`;
                 }
                 let excludeCost = false;
