@@ -299,12 +299,23 @@
             font-weight: 800;
             font-size: 1.3rem;
             min-width: 40px;
-            height: 40px;
+            min-height: 40px;
+            height: auto;
+            padding: 4px 12px;
             border-radius: 8px;
             margin-bottom: 12px;
             background: var(--page-bg);
             color: var(--primary);
             border: 2px solid var(--border-color);
+            text-align: center;
+            line-height: 1.2;
+            word-break: break-word;
+        }
+
+        .score-val.long-text {
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 8px 16px;
         }
 
         .table-note {
@@ -987,7 +998,11 @@
                             let score = lines.shift() || '0';
                             let note = lines.join('\n').trim();
 
-                            let html = `<div class="score-val" ${getScoreStyle(score)}>${score}</div>`;
+                            // Detect long text in score bubble
+                            let isLong = score.length > 8 || /[^\d\-\.]/.test(score);
+                            let longClass = isLong ? 'long-text' : '';
+
+                            let html = `<div class="score-val ${longClass}" ${getScoreStyle(score)}>${score}</div>`;
                             if (note && note !== '-' && note !== '') {
                                 html += `<div class="table-note">${note.replace(/\n/g, '<br>')}</div>`;
                             }
