@@ -1204,12 +1204,16 @@
                 coverSubtitle = '全面數位化升級<br>建構企業專屬知識庫';
             }
             const noteIndex = headers.indexOf('備註');
-            let coverNote = '備註：本流程依 ISO 42001 (AIMS) 架構設計...'; // Default fallback
+            let coverNote = '備註：本流程依 ISO 42001 (AIMS) 架構設計，AI 代理人定位為「數據搬運工」(OEM) 或「深度研究助理」(ODM)。所有外部模型呼叫須經企業 API Gateway 統一授權，產出結果附帶 ADR 決策記錄以確保審計可追溯性。成本相關階段採 Human-on-the-loop 模式，高敏感數據依 STRIDE 模型實施存取控制。'; // Default fallback
             rows.forEach((r) => {
                 if (r[0] && r[0].trim() === '封面備註') {
-                    if (noteIndex !== -1 && r[noteIndex]) {
-                        coverNote = r[noteIndex].trim();
-                    }
+                    // Try to find it at noteIndex, or if it's placed earlier because of empty columns
+                    let val = null;
+                    if (noteIndex !== -1 && r[noteIndex]) val = r[noteIndex];
+                    else if (r.length === 2 && r[1]) val = r[1]; // if they just put it in the second column
+                    else if (r[r.length - 1]) val = r[r.length - 1]; // or the very last available column
+
+                    if (val) coverNote = val.trim();
                 }
             });
 
