@@ -716,6 +716,7 @@
                 <button id="btn-database" onclick="switchView('database')">資源層：資料庫</button>
                 <button id="btn-oem" onclick="switchView('oem')">流程層：OEM</button>
                 <button id="btn-odm" onclick="switchView('odm')">流程層：ODM</button>
+                <button id="btn-qa" onclick="switchView('qa')">常見問題 (QA)</button>
                 <button class="comparison-btn" onclick="openComparison()">比較表</button>
                 <button class="glossary-btn" onclick="openGlossary()" title="名詞解釋">?</button>
             </div>
@@ -946,7 +947,8 @@
             schema: [],
             database: [],
             oem: [],
-            odm: []
+            odm: [],
+            qa: []
         };
 
         function parseCSV(text) {
@@ -1002,11 +1004,12 @@
                 const baseUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
                 const cacheBuster = "&t=" + new Date().getTime();
 
-                const [dbRes, oemRes, odmRes, schemaRes] = await Promise.all([
+                const [dbRes, oemRes, odmRes, schemaRes, qaRes] = await Promise.all([
                     fetch(`${baseUrl}&sheet=database${cacheBuster}`),
                     fetch(`${baseUrl}&sheet=oem${cacheBuster}`),
                     fetch(`${baseUrl}&sheet=odm${cacheBuster}`),
-                    fetch(`${baseUrl}&sheet=schema${cacheBuster}`)
+                    fetch(`${baseUrl}&sheet=schema${cacheBuster}`),
+                    fetch(`${baseUrl}&sheet=qa${cacheBuster}`)
                 ]);
 
                 if (!dbRes.ok || !schemaRes.ok) throw new Error("Need a local server to fetch CSV");
@@ -1015,11 +1018,13 @@
                 const oemText = await oemRes.text();
                 const odmText = await odmRes.text();
                 const schemaText = await schemaRes.text();
+                const qaText = await qaRes.text();
 
                 store.database = parseCSV(dbText);
                 store.oem = parseCSV(oemText);
                 store.odm = parseCSV(odmText);
                 store.schema = parseCSV(schemaText);
+                store.qa = parseCSV(qaText);
 
                 document.getElementById('loading').style.display = 'none';
                 switchView('schema');
@@ -1200,6 +1205,9 @@
             if (type === 'database') {
                 coverTitle = '資料庫架構';
                 coverSubtitle = '整合 <span style="display:inline-block; background:rgba(96,165,250,0.15); color:#60a5fa; padding:2px 10px; border-radius:6px; border:1px solid rgba(96,165,250,0.3);">內部</span> 與外部數據<br>建構 AI 檢索核心來源';
+            } else if (type === 'qa') {
+                coverTitle = '常見問題 QA';
+                coverSubtitle = '解決您的疑慮，深入了解 AI 導入<br>與資安管控機制';
             } else {
                 coverTitle = type.toUpperCase() + ' 導入流程';
                 coverSubtitle = '全面數位化升級<br>建構企業專屬知識庫';
@@ -1292,6 +1300,32 @@
                         '<div class="card-footer">' +
                         '<div class="card-annotation" contenteditable="true">' + annotation + '</div>' +
                         '</div>';
+                } else if (type === 'qa') {
+                    const answer = (row[headers.indexOf('解答')] || row[1] || '').replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+                    const annotationIdx = headers.indexOf('備註');
+                    let annotation = (annotationIdx !== -1 && row[annotationIdx]) ? row[annotationIdx] : '';
+                    if (annotation) {
+                        annotation = annotation.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    }
+
+                    // A badge if there is a category column, otherwise '問答'
+                    const categoryIdx = headers.indexOf('類別');
+                    const badge = (categoryIdx !== -1 && row[categoryIdx]) ? row[categoryIdx] : '問答';
+
+                    cardInnerHTML =
+                        '<div class="card-header">' +
+                        // Slightly smaller title for questions
+                        '<h3 class="card-title" style="font-size:1.6rem; color:#0284c7; white-space: normal;">' + title + '</h3>' +
+                        '<div class="card-badge">' + badge + '</div>' +
+                        '</div>' +
+                        '<div class="card-content-area" style="margin-top:20px;">' +
+                        '<div style="font-size:1.2rem; color:var(--txt-body); line-height:1.6; padding: 16px; background: rgba(96,165,250,0.05); border-left: 4px solid var(--primary); border-radius: 4px;">' + answer + '</div>' +
+                        '</div>' +
+                        (annotation ?
+                            '<div class="card-footer">' +
+                            '<div class="card-annotation" contenteditable="true">' + annotation + '</div>' +
+                            '</div>' : '');
                 } else {
                     const timeOld = parseFloat(row[headers.indexOf('原始工時')] || '0');
                     const timeNew = parseFloat(row[headers.indexOf('預估工時')] || '0');
@@ -1305,7 +1339,7 @@
 
                     for (let i = 1; i < headers.length; i++) {
                         const h = headers[i];
-                        if (h === '階段名稱' || h === '原始工時' || h === '預估工時' || h === undefined) continue;
+                        if (h === '階段名稱' || h === '原始工時' || h === '預估工時' || h === '備註' || h === undefined) continue;
 
                         let val = row[i];
                         let valClass = 'row-value';
