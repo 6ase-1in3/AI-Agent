@@ -401,8 +401,8 @@
         /* Header inside the card */
         .card-header {
             border-bottom: 2px solid var(--page-bg);
-            padding-bottom: 8px;
-            margin-bottom: 2px;
+            padding-bottom: 6px;
+            margin-bottom: 4px;
             flex-shrink: 0;
             display: flex;
             justify-content: space-between;
@@ -433,7 +433,7 @@
 
         .card-desc {
             font-size: 1rem;
-            margin: 4px 0 12px 0;
+            margin: 2px 0 0 0;
             color: var(--secondary);
             line-height: 1.5;
             font-weight: 500;
@@ -482,6 +482,10 @@
             gap: 4px;
             padding: 12px 0;
             border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-row:first-child {
+            padding-top: 6px;
         }
 
         .data-row:last-child {
@@ -1128,16 +1132,13 @@
                     // Update corresponding dot
                     Array.from(dotsContainer.children).forEach(d => {
                         d.classList.remove('active');
-                        d.style.boxShadow = 'none';
                     });
                     dot.className = 'dot active';
-                    dot.style.boxShadow = '0 0 10px var(--primary)';
                 };
                 container.appendChild(cardEl);
 
                 const dot = document.createElement('div');
                 dot.className = index === 0 ? 'dot active' : 'dot';
-                if (index === 0) dot.style.boxShadow = '0 0 10px var(--primary)';
 
                 dot.onclick = () => cardEl.onclick();
                 dotsContainer.appendChild(dot);
