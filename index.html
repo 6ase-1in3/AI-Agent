@@ -1064,7 +1064,7 @@
                     }
                 }
 
-                // Populate Comparison Modal
+                // Populate Comparison Modal (Simplified Tag-based)
                 if (store.comparison && store.comparison.length > 0) {
                     const rawRows = store.comparison;
 
@@ -1075,11 +1075,9 @@
                     }
                     const colCount = headers.length;
 
-                    // 2. Separate into Header, Subtitle, and Data
+                    // 2. Separate rows (Header, Optional Subtitle, Data)
                     let subtitles = [];
                     let dataRows = [];
-
-                    // Check if second row is a subtitle row (starts with '簡介' or similar)
                     const firstCellR2 = (rawRows[1] && rawRows[1][0]) ? rawRows[1][0].trim() : '';
                     if (firstCellR2.includes('簡介') || firstCellR2.includes('簡')) {
                         subtitles = rawRows[1].slice(0, colCount);
@@ -1088,78 +1086,59 @@
                         dataRows = rawRows.slice(1);
                     }
 
-                    // 3. Build Header HTML (Dual Row if subtitles exist)
-                    let theadHTML = '';
-
-                    // Header Row 1
-                    let row1 = '<tr>';
-                    // The first cell might accidentally contain "評估項目 簡介" in some imports
+                    // 3. Build Header HTML
+                    let theadHTML = '<tr>';
                     let h0 = headers[0] || '評估項目';
                     if (h0.includes('簡介') && subtitles.length > 0) h0 = h0.replace('簡介', '').trim();
-                    row1 += `<th>${h0}</th>`;
+                    theadHTML += `<th>${h0}</th>`;
                     for (let i = 1; i < colCount; i++) {
-                        row1 += `<th>${headers[i] || ''}</th>`;
+                        theadHTML += `<th>${headers[i] || ''}</th>`;
                     }
-                    row1 += '</tr>';
-                    theadHTML += row1;
+                    theadHTML += '</tr>';
 
-                    // Header Row 2 (Subtitles)
                     if (subtitles.length > 0) {
-                        let row2 = '<tr>';
-                        row2 += `<th style="background:#F8FAFC; color:var(--secondary); font-size:0.9rem; font-weight:normal; border-top:1px solid #eef2f6;">${subtitles[0] || '簡介'}</th>`;
+                        theadHTML += '<tr>';
+                        theadHTML += `<th style="background:#F8FAFC; color:var(--secondary); font-size:0.9rem; font-weight:normal; border-top:1px solid #eef2f6;">${subtitles[0] || '簡介'}</th>`;
                         for (let i = 1; i < colCount; i++) {
-                            row2 += `<th style="background:#F8FAFC; color:var(--secondary); font-size:0.85rem; font-weight:600; border-top:1px solid #eef2f6;">${subtitles[i] || ''}</th>`;
+                            theadHTML += `<th style="background:#F8FAFC; color:var(--secondary); font-size:0.85rem; font-weight:600; border-top:1px solid #eef2f6;">${subtitles[i] || ''}</th>`;
                         }
-                        row2 += '</tr>';
-                        theadHTML += row2;
+                        theadHTML += '</tr>';
                     }
 
-                    // 4. Build Body HTML
-                    const getScoreStyle = (s) => {
-                        let val = s.trim();
-                        if (val === '10' || val === '10 (滿分)') {
-                            return 'style="color:#10b981;border-color:#a7f3d0;background:#ecfdf5"';
-                        } else if (val === '0' || val === '-' || val === '0分' || val === '') {
-                            return 'style="color:var(--txt-light);border-color:#e2e8f0;background:#f8fafc"';
-                        }
-                        return '';
-                    };
-
+                    // 4. Build Body HTML (Tag-based: @Text@ -> Bubble)
                     const tbodyHTML = dataRows.map(row => {
                         if (!row[0] || row[0].trim() === '') return '';
                         let metric = row[0].trim();
                         let rowHtml = '';
 
                         for (let i = 1; i < colCount; i++) {
-                            let cellData = row[i] || '';
-                            let lines = cellData.split('\n');
-                            let score = lines.shift() || '0';
-                            let note = lines.join('\n').trim();
-
-                            // Detect long text in score bubble
-                            let isLong = score.length > 8 || /[^\d\-\.\,]/.test(score) || score.includes('萬') || score.includes('TWD');
-                            let longClass = isLong ? 'long-text' : '';
-
-                            let html = `<div class="score-val ${longClass}" ${getScoreStyle(score)}>${score}</div>`;
-                            if (note && note !== '-' && note !== '') {
-                                html += `<div class="table-note">${note.replace(/\n/g, '<br>')}</div>`;
+                            let cellData = (row[i] || '').trim();
+                            if (cellData === '' || cellData === '0') {
+                                rowHtml += `<td style="text-align:center;">-</td>`;
+                                continue;
                             }
-                            rowHtml += `<td>${html}</td>`;
+
+                            // Handle @tag@ patterns
+                            let processed = cellData.replace(/@(.*?)@/g, (match, p1) => {
+                                let val = p1.trim();
+                                let style = '';
+                                if (val === '10') style = 'style="color:#10b981;border-color:#a7f3d0;background:#ecfdf5"';
+                                else if (val === '0' || val === '-') style = 'style="color:var(--txt-light);border-color:#e2e8f0;background:#f8fafc"';
+
+                                let isLong = val.length > 8 || /[^\d\-\.\,]/.test(val) || val.includes('萬') || val.includes('TWD');
+                                let longClass = isLong ? 'long-text' : '';
+                                return `<div class="score-val ${longClass}" ${style}>${val}</div>`;
+                            });
+
+                            processed = processed.replace(/\n/g, '<br>');
+                            rowHtml += `<td><div class="cell-content" style="text-align:left; line-height:1.6;">${processed}</div></td>`;
                         }
 
-                        return `<tr>
-                            <td class="row-label">${metric}</td>
-                            ${rowHtml}
-                        </tr>`;
+                        return `<tr><td class="row-label">${metric}</td>${rowHtml}</tr>`;
                     }).join('');
 
                     const modalBody = document.getElementById('modal-body');
-                    modalBody.innerHTML = `<div class="compare-wrapper">
-                        <table class="compare-table">
-                            <thead>${theadHTML}</thead>
-                            <tbody>${tbodyHTML}</tbody>
-                        </table>
-                    </div>`;
+                    modalBody.innerHTML = `<div class="compare-wrapper"><table class="compare-table"><thead>${theadHTML}</thead><tbody>${tbodyHTML}</tbody></table></div>`;
                 }
 
                 document.getElementById('loading').style.display = 'none';
