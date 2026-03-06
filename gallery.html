@@ -366,6 +366,10 @@
             transform: translateY(-2px);
         }
 
+        .card-container.schema-layout-card {
+            flex: 0 0 calc((100% - 32px) / 2);
+        }
+
         .card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -1051,7 +1055,7 @@
 
             schemaData.forEach((item, index) => {
                 const cardEl = document.createElement('div');
-                cardEl.className = 'card-container';
+                cardEl.className = 'card-container schema-layout-card';
 
                 if (item.type === 'image') {
                     cardEl.innerHTML = `<div class="card" style="padding:0; overflow:hidden; display:flex;">
