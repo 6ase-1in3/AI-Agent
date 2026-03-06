@@ -740,38 +740,7 @@
                     <button class="modal-close" onclick="closeGlossary()">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <div class="term-row">
-                        <div class="term-name">RAG</div>
-                        <div class="term-desc">
-                            專用於<strong>辭意檢索</strong>的資料系統。<br>例如：搜尋「很餓要吃神麼?」，它不是去找字面上完全一樣的字，而是提供關於飲食接近的座標資料，再配合資料標籤[小吃]縮小範圍，找到正確答案。
-                        </div>
-                    </div>
-                    <div class="term-row">
-                        <div class="term-name">JSON (Json)</div>
-                        <div class="term-desc">
-                            一種輕量級的<strong>資料交換格式</strong>。<br>就像是把複雜的表格資料，翻譯成系統、表單、資料庫都能看得懂且不會認錯的統一語言。是把 AI
-                            天馬行空的回答變成「系統可以直接套用的規格」。</div>
-                    </div>
-                    <div class="term-row">
-                        <div class="term-name">內部 AI<br>(地端/私有)</div>
-                        <div class="term-desc">將大腦(開源模型)買回來<strong>關在公司家裡完全斷網</strong>運作的
-                            AI。<br>特色：隱私性極高，不會外洩任何機密。<br>缺點：受限於公司的硬體設備，這顆大腦算力有限，只能處理不太複雜的文書或固定邏輯。</div>
-                    </div>
-                    <div class="term-row">
-                        <div class="term-name">外部 AI<br>(雲端API)</div>
-                        <div class="term-desc">直接呼叫科技巨頭(如 GPT, Gemini)
-                            放在雲端的高階大腦。<br>特色：擁有數十萬字記憶與無限的超級算力，能解決極端複雜的寫程式與推理需求。<br>缺點：機密資料傳輸出去會有隱私疑慮。</div>
-                    </div>
-                    <div class="term-row">
-                        <div class="term-name">Vibe Coding</div>
-                        <div class="term-desc">現在最新的寫程式方式。<br>指的是人類幾乎不自己寫任何一行程式碼，純粹透過<strong>自然語言下達指令和討論</strong>，就指揮高階
-                            AI 當場把軟體架構或應用系統順暢地「聊」出來。</div>
-                    </div>
-                    <div class="term-row">
-                        <div class="term-name">Agent Workflow<br>(代理工作流)</div>
-                        <div class="term-desc">把工作拆解並「交辦」給多個不同專長的 AI 機器人。<br>他們會自己分工合作、互相檢查結果、自動修正錯誤，自主完成一整個複雜流暢的專案任務。
-                        </div>
-                    </div>
+                    <!-- Populated dynamically via JS from qa.csv -->
                 </div>
             </div>
         </div>
@@ -1002,24 +971,44 @@
                 const baseUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
                 const cacheBuster = "&t=" + new Date().getTime();
 
-                const [dbRes, oemRes, odmRes, schemaRes] = await Promise.all([
+                const [dbRes, oemRes, odmRes, schemaRes, qaRes] = await Promise.all([
                     fetch(`${baseUrl}&sheet=database${cacheBuster}`),
                     fetch(`${baseUrl}&sheet=oem${cacheBuster}`),
                     fetch(`${baseUrl}&sheet=odm${cacheBuster}`),
-                    fetch(`${baseUrl}&sheet=schema${cacheBuster}`)
+                    fetch(`${baseUrl}&sheet=schema${cacheBuster}`),
+                    fetch(`${baseUrl}&sheet=qa${cacheBuster}`)
                 ]);
 
-                if (!dbRes.ok || !schemaRes.ok) throw new Error("Need a local server to fetch CSV");
+                if (!dbRes.ok || !schemaRes.ok || !qaRes.ok) throw new Error("Need a local server to fetch CSV");
 
                 const dbText = await dbRes.text();
                 const oemText = await oemRes.text();
                 const odmText = await odmRes.text();
                 const schemaText = await schemaRes.text();
+                const qaText = await qaRes.text();
 
                 store.database = parseCSV(dbText);
                 store.oem = parseCSV(oemText);
                 store.odm = parseCSV(odmText);
                 store.schema = parseCSV(schemaText);
+                store.qa = parseCSV(qaText);
+
+                // Populate QA Modal
+                if (store.qa && store.qa.length > 1) {
+                    const qaRows = store.qa.slice(1);
+                    const modalBody = document.querySelector('#glossary-modal .modal-body');
+                    if (modalBody) {
+                        modalBody.innerHTML = qaRows.map(row => {
+                            if (!row[0]) return '';
+                            let termName = row[0];
+                            let termDesc = (row[1] || '').replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                            return `<div class="term-row">
+                                <div class="term-name">${termName}</div>
+                                <div class="term-desc">${termDesc}</div>
+                            </div>`;
+                        }).join('');
+                    }
+                }
 
                 document.getElementById('loading').style.display = 'none';
                 switchView('schema');
