@@ -924,15 +924,22 @@
                 if (store.comparison && store.comparison.length > 2) {
                     const compRows = store.comparison;
                     const headers = compRows[0]; // ["評估項目", "外部 AI", "地端 / 內部 AI", "專用分析型 AI"]
-                    const subtitles = compRows[1]; // ["簡介", "雲端 API 模型", ...]
-                    const dataRows = compRows.slice(2);
+
+                    let subtitles = [];
+                    let dataRows = [];
+                    if (compRows[1] && compRows[1][0] && compRows[1][0].trim() === '簡介') {
+                        subtitles = compRows[1];
+                        dataRows = compRows.slice(2);
+                    } else {
+                        dataRows = compRows.slice(1);
+                    }
 
                     // Build Header dynamically
                     let theadHTML = '<tr><th>' + (headers[0] || '評估項目') + '</th>';
                     for (let i = 1; i < headers.length; i++) {
                         let type = headers[i] || '';
-                        let sub = subtitles[i] || '';
-                        theadHTML += `<th>${type}<br><span style="font-size:0.9rem;font-weight:600;color:var(--secondary)">${sub}</span></th>`;
+                        let sub = subtitles[i] ? `<br><span style="font-size:0.9rem;font-weight:600;color:var(--secondary)">${subtitles[i]}</span>` : '';
+                        theadHTML += `<th>${type}${sub}</th>`;
                     }
                     theadHTML += '</tr>';
 
