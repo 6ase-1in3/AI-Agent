@@ -401,8 +401,8 @@
         /* Header inside the card */
         .card-header {
             border-bottom: 2px solid var(--page-bg);
-            padding-bottom: 6px;
-            margin-bottom: 4px;
+            padding-bottom: 0px;
+            margin-bottom: 0px;
             flex-shrink: 0;
             display: flex;
             justify-content: space-between;
@@ -433,7 +433,7 @@
 
         .card-desc {
             font-size: 1rem;
-            margin: 2px 0 0 0;
+            margin: -4px 0 0 0;
             color: var(--secondary);
             line-height: 1.5;
             font-weight: 500;
@@ -1305,6 +1305,7 @@
 
                     for (let i = 1; i < headers.length; i++) {
                         const h = headers[i];
+                        // Skip system columns or empty header tags completely
                         if (!h || h.trim() === '' || h === '階段名稱' || h === '原始工時' || h === '預估工時' || h === '備註' || h === '封面備註') continue;
 
                         let val = row[i];
