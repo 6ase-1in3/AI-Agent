@@ -1968,6 +1968,17 @@
             });
 
             tour.addStep({
+                title: '縮放教學',
+                text: '如果覺得畫面太小或太大，可以使用鍵盤的 <strong>Ctrl + +</strong> 或 <strong>Ctrl + -</strong> 來縮放網頁比例。',
+                attachTo: { element: '.controls', on: 'bottom' },
+                buttons: [
+                    { action: tour.back, classes: 'shepherd-button-secondary', text: '上一步' },
+                    { action: tour.next, text: '下一步' }
+                ],
+                id: 'zoom-instruction'
+            });
+
+            tour.addStep({
                 title: '名詞解釋',
                 text: '遇到看不懂的 AI 黑話嗎？點擊右邊的 [?] 可以開啟名詞解釋面板。',
                 attachTo: { element: 'button[title="名詞解釋"]', on: 'left' },
