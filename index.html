@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 
 <head>
@@ -1440,21 +1440,21 @@
             let coverSubtitle = '';
 
             if (type === 'database') {
-                coverTitle = '<span style="font-size: 1.2rem; opacity: 0.7; display: block; margin-bottom: 8px;">隡?獢?</span>鞈?摨急瑽?;
-                coverSubtitle = '?游? <span style="display:inline-block; background:rgba(96,165,250,0.15); color:#60a5fa; padding:2px 10px; border-radius:6px; border:1px solid rgba(96,165,250,0.3);">?折</span> ???冽??br>撱箸? AI 瑼Ｙ揣?詨?靘?';
+                coverTitle = '<span style="font-size: 1.2rem; opacity: 0.7; display: block; margin-bottom: 8px;">企劃案：</span>資料庫架構';
+                coverSubtitle = '整合 <span style="display:inline-block; background:rgba(96,165,250,0.15); color:#60a5fa; padding:2px 10px; border-radius:6px; border:1px solid rgba(96,165,250,0.3);">內部</span> 與外部數據<br>建構 AI 檢索核心來源';
             } else {
-                coverTitle = `<span style="font-size: 1.2rem; opacity: 0.7; display: block; margin-bottom: 8px;">隡?獢?</span>${type.toUpperCase()} 撠瘚?`;
-                coverSubtitle = '?券?訾???蝝?br>撱箸?隡平撠惇?亥?摨?;
+                coverTitle = `<span style="font-size: 1.2rem; opacity: 0.7; display: block; margin-bottom: 8px;">企劃案：</span>${type.toUpperCase()} 導入流程`;
+                coverSubtitle = '全面數位化升級<br>建構企業專屬知識庫';
             }
 
             // Robust header indexing
-            const noteIndex = headers.findIndex(h => h && h.trim().startsWith('?酉'));
-            const oldTimeIndex = headers.findIndex(h => h && h.includes('??撌交?'));
-            const newTimeIndex = headers.findIndex(h => h && h.includes('?摯撌交?'));
+            const noteIndex = headers.findIndex(h => h && h.trim().startsWith('備註'));
+            const oldTimeIndex = headers.findIndex(h => h && h.includes('原始工時'));
+            const newTimeIndex = headers.findIndex(h => h && h.includes('預估工時'));
 
             let coverNote = ''; // Default fallback
             rows.forEach((r) => {
-                if (r[0] && r[0].includes('撠?酉')) {
+                if (r[0] && r[0].includes('封面備註')) {
                     let val = null;
                     if (noteIndex !== -1 && r[noteIndex]) val = r[noteIndex];
                     else if (r.length === 2 && r[1]) val = r[1];
