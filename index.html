@@ -1432,20 +1432,20 @@
             const contentPaneStyle = "flex:1;padding:24px;position:relative;display:flex;flex-direction:column;justify-content:center;min-width:0;";
 
             const productInfoHTML = `
-            <div style="${sectionWrapperStyle}min-height:110px;">
+            <div style="${sectionWrapperStyle}min-height:120px;">
                 <div style="${labelStripStyle}"><span style="${labelTextStyle}">產品資訊</span></div>
                 <div style="${contentPaneStyle}">
-                    <div style="font-size:1.8rem;font-weight:800;color:var(--primary)">喬山 Matrix 家用電動重訓機</div>
-                    <div style="font-size:1.05rem;color:var(--secondary);margin-top:6px;">合作模式：<strong>OEM（委託製造）</strong>｜合作夥伴：喬山健康科技</div>
+                    <div style="font-size:2.2rem;font-weight:800;color:var(--primary);letter-spacing:-0.5px;">喬山 Matrix 家用電動重訓機</div>
+                    <div style="font-size:1.2rem;color:var(--secondary);margin-top:8px;">合作模式：<strong>OEM（委託製造）</strong>｜合作夥伴：喬山健康科技</div>
                     
                     <button id="btn-toggle-ratings"
-                        style="position:absolute;top:50%;right:24px;transform:translateY(-50%);background:var(--primary);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:0.9rem;font-weight:600;cursor:pointer;transition:opacity .2s;"
-                        onmouseenter="this.style.opacity='.85'" onmouseleave="this.style.opacity='1'"
-                        onclick="const rp=document.getElementById('ratings-panel'); const asc=document.getElementById('analysis-scroller'); const alt=document.getElementById('analysis-label-text'); const dots=document.getElementById('analysis-dots');
+                        style="position:absolute;top:50%;right:32px;transform:translateY(-50%);background:var(--primary);color:#fff;border:none;border-radius:10px;padding:12px 24px;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px;"
+                        onmouseenter="this.style.opacity='.85'; this.style.transform='translateY(-50%) translateY(-2px)'" onmouseleave="this.style.opacity='1'; this.style.transform='translateY(-50%)'"
+                        onclick="const rp=document.getElementById('ratings-panel'); const asc=document.getElementById('analysis-scroller'); const alt=document.getElementById('analysis-label-text');
                             if(rp.style.display === 'none'){
-                                rp.style.display='block'; asc.style.display='none'; alt.textContent='評分紀錄'; this.textContent='← 返回分析'; dots.style.opacity='0';
+                                rp.style.display='flex'; asc.style.display='none'; alt.textContent='問卷與評分'; this.textContent='← 返回分析報告';
                             } else {
-                                rp.style.display='none'; asc.style.display='flex'; alt.textContent='分析洞察'; this.textContent='📊 評分系統與評論紀錄'; dots.style.opacity='1';
+                                rp.style.display='none'; asc.style.display='flex'; alt.textContent='分析洞察'; this.textContent='📊 評分系統與評論紀錄';
                             }">
                         📊 評分系統與評論紀錄
                     </button>
@@ -1453,18 +1453,18 @@
             </div>`;
 
             const financialHTML = `
-            <div style="${sectionWrapperStyle}min-height:100px;">
+            <div style="${sectionWrapperStyle}min-height:120px;">
                 <div style="${labelStripStyle}"><span style="${labelTextStyle}">效益總覽</span></div>
                 <div style="${contentPaneStyle}padding:0;">
                     <table style="width:100%;border-collapse:collapse;table-layout:fixed;height:100%;">
                         <thead>
                             <tr style="background:#f8fafc;border-bottom:1px solid #e2e8f0;">
-                                ${financialData.map((d,idx) => `<th style="padding:10px;font-size:0.75rem;color:#94a3b8;font-weight:700;text-align:center;border-right:${idx===financialData.length-1?'none':'1px solid #e2e8f0'};text-transform:uppercase;">${d.label}</th>`).join('')}
+                                ${financialData.map((d,idx) => `<th style="padding:12px;font-size:1.15rem;color:#64748b;font-weight:700;text-align:center;border-right:${idx===financialData.length-1?'none':'1px solid #e2e8f0'};text-transform:uppercase;">${d.label}</th>`).join('')}
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                ${financialData.map((d,idx) => `<td style="padding:14px 10px;font-size:1.1rem;font-weight:800;color:${d.color};text-align:center;border-right:${idx===financialData.length-1?'none':'1px solid #e2e8f0'}">${d.val}</td>`).join('')}
+                                ${financialData.map((d,idx) => `<td style="padding:18px 12px;font-size:1.5rem;font-weight:800;color:${d.color};text-align:center;border-right:${idx===financialData.length-1?'none':'1px solid #e2e8f0'}">${d.val}</td>`).join('')}
                             </tr>
                         </tbody>
                     </table>
@@ -1488,15 +1488,16 @@
                 const borderRight = idx === analysisRows.length - 1 ? 'none' : '1px solid #e2e8f0';
 
                 return `
-                <div style="flex-shrink:0;width:450px;border-right:${borderRight};display:flex;flex-direction:column;">
-                    <div style="background:${lightColor};padding:14px 24px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:12px;">
-                         <span style="font-size:1.6rem;">${icon}</span>
+                return `
+                <div style="flex-shrink:0;width:480px;border-right:${borderRight};display:flex;flex-direction:column;">
+                    <div style="background:${lightColor};padding:18px 30px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:14px;">
+                         <span style="font-size:2rem;">${icon}</span>
                          <div>
-                            <div style="font-size:0.75rem;color:${accentColor};font-weight:700;text-transform:uppercase;letter-spacing:1px;">${group}</div>
-                            <div style="font-size:1.1rem;font-weight:800;color:var(--primary);">${badge}</div>
+                            <div style="font-size:0.95rem;color:${accentColor};font-weight:700;text-transform:uppercase;letter-spacing:1px;">${group}</div>
+                            <div style="font-size:1.4rem;font-weight:800;color:var(--primary);">${badge}</div>
                          </div>
                     </div>
-                    <div style="padding:24px;font-size:1.05rem;color:var(--txt-body);line-height:1.7;overflow-y:auto;flex:1;">${body}</div>
+                    <div style="padding:32px;font-size:1.3rem;color:var(--txt-body);line-height:1.75;overflow-y:auto;flex:1;">${body}</div>
                 </div>`;
             }).join('');
 
@@ -1507,9 +1508,36 @@
                     <div id="analysis-scroller" style="flex:1;display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;">
                         ${cardHTML || '<div style="padding:40px;color:#94a3b8;">請在 Google Sheet 的 "分析洞察" 分頁填寫內容...</div>'}
                     </div>
-                    <div id="ratings-panel" style="display:none;flex:1;padding:24px;overflow-y:auto;">
-                        <div id="ratings-content" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;">
-                            <div style="color:#94a3b8;font-size:0.95rem;">載入評分資料中...</div>
+                    <div id="ratings-panel" style="display:none;flex:1;padding:32px;overflow-y:auto;flex-direction:column;gap:40px;background:#fcfcfc;">
+                        <!-- QR Code Entry -->
+                        <div style="background:linear-gradient(135deg, #0f172a 0%, #334155 100%); border-radius:24px; padding:48px; color:white; display:flex; align-items:center; gap:60px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.3);">
+                            <div style="flex:1;">
+                                <h3 style="font-size:2.4rem; margin-bottom:16px; font-weight:800; letter-spacing:-1px;">即時專案滿意度調查</h3>
+                                <p style="font-size:1.2rem; opacity:0.9; line-height:1.7; margin-bottom:32px; max-width:600px;">
+                                    歡迎各位評委與團隊成員參與本次 AI 導入專案的綜合評價。<br>
+                                    您的反饋將直接同步至此管理系統，作為產品迭代與決策的重要參考。
+                                </p>
+                                <div style="display:flex; align-items:center; gap:20px;">
+                                    <a href="https://6ase-1in3.github.io/AI-Agent/survey.html" target="_blank" style="display:inline-flex; align-items:center; gap:12px; background:var(--accent); color:white; text-decoration:none; padding:16px 32px; border-radius:12px; font-size:1.2rem; font-weight:800; transition:all 0.3s; box-shadow:0 8px 15px rgba(2, 132, 199, 0.4);" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                                        🔗 開啟問卷網頁
+                                    </a>
+                                    <div style="font-size:1.1rem; opacity:0.7; font-weight:600;">或掃描右方 QR Code 快速填寫 →</div>
+                                </div>
+                            </div>
+                            <div style="background:white; padding:16px; border-radius:16px; box-shadow: 0 0 20px rgba(255,255,255,0.1);">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://6ase-1in3.github.io/AI-Agent/survey.html" alt="Survey QR" style="display:block; width:240px; height:240px;">
+                            </div>
+                        </div>
+
+                        <div style="border-top:2px solid #f1f5f9; padding-top:32px;">
+                            <div style="font-size:1.6rem; font-weight:800; color:var(--primary); margin-bottom:24px; display:flex; align-items:center; gap:12px;">
+                                <span style="font-size:2rem;">💬</span> 歷史評論與評分紀錄
+                            </div>
+                            <div id="ratings-content" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(380px,1fr)); gap:24px;">
+                                <div style="color:#94a3b8; font-size:1.1rem; padding:40px; text-align:center; border:2px dashed #e2e8f0; border-radius:16px;">
+                                    正在同步 Google 試算表最新的評價資料...
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
