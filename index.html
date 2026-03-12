@@ -1464,7 +1464,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                ${financialData.map((d,idx) => `<td style="padding:18px 12px;font-size:1.5rem;font-weight:800;color:${d.color};text-align:center;border-right:${idx===financialData.length-1?'none':'1px solid #e2e8f0'}">${d.val}</td>`).join('')}
+                                ${financialData.map((d,idx) => `<td style="padding:18px 12px;font-size:1.6rem;font-weight:800;color:${d.color};text-align:center;border-right:${idx===financialData.length-1?'none':'1px solid #e2e8f0'}">${d.val}</td>`).join('')}
                             </tr>
                         </tbody>
                     </table>
@@ -1488,7 +1488,6 @@
                 const borderRight = idx === analysisRows.length - 1 ? 'none' : '1px solid #e2e8f0';
 
                 return `
-                return `
                 <div style="flex-shrink:0;width:480px;border-right:${borderRight};display:flex;flex-direction:column;">
                     <div style="background:${lightColor};padding:18px 30px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:14px;">
                          <span style="font-size:2rem;">${icon}</span>
@@ -1509,8 +1508,11 @@
                         ${cardHTML || '<div style="padding:40px;color:#94a3b8;">請在 Google Sheet 的 "分析洞察" 分頁填寫內容...</div>'}
                     </div>
                     <div id="ratings-panel" style="display:none;flex:1;padding:32px;overflow-y:auto;flex-direction:column;gap:40px;background:#fcfcfc;">
-                        <!-- QR Code Entry -->
+                        <!-- QR Code Entry (QR on LEFT as requested) -->
                         <div style="background:linear-gradient(135deg, #0f172a 0%, #334155 100%); border-radius:24px; padding:48px; color:white; display:flex; align-items:center; gap:60px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.3);">
+                            <div style="background:white; padding:16px; border-radius:16px; box-shadow: 0 0 20px rgba(255,255,255,0.1);">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://6ase-1in3.github.io/AI-Agent/survey.html" alt="Survey QR" style="display:block; width:240px; height:240px;">
+                            </div>
                             <div style="flex:1;">
                                 <h3 style="font-size:2.4rem; margin-bottom:16px; font-weight:800; letter-spacing:-1px;">即時專案滿意度調查</h3>
                                 <p style="font-size:1.2rem; opacity:0.9; line-height:1.7; margin-bottom:32px; max-width:600px;">
@@ -1521,11 +1523,7 @@
                                     <a href="https://6ase-1in3.github.io/AI-Agent/survey.html" target="_blank" style="display:inline-flex; align-items:center; gap:12px; background:var(--accent); color:white; text-decoration:none; padding:16px 32px; border-radius:12px; font-size:1.2rem; font-weight:800; transition:all 0.3s; box-shadow:0 8px 15px rgba(2, 132, 199, 0.4);" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
                                         🔗 開啟問卷網頁
                                     </a>
-                                    <div style="font-size:1.1rem; opacity:0.7; font-weight:600;">或掃描右方 QR Code 快速填寫 →</div>
                                 </div>
-                            </div>
-                            <div style="background:white; padding:16px; border-radius:16px; box-shadow: 0 0 20px rgba(255,255,255,0.1);">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://6ase-1in3.github.io/AI-Agent/survey.html" alt="Survey QR" style="display:block; width:240px; height:240px;">
                             </div>
                         </div>
 
