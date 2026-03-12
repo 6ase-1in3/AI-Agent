@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>產品評價問卷 - 企業 AI 導入</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #0284c7;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #334155;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            border: 1px solid var(--border);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            outline: none;
+            color: var(--text-main);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .submit-btn:hover {
+            background: #0369a1;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(2, 132, 199, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .footer {
+            margin-top: 32px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Success Message Overlay */
+        #success-overlay {
+            display: none;
+            text-align: center;
+        }
+
+        #success-overlay h2 {
+            color: #059669;
+            margin-bottom: 12px;
+        }
+
+        .icon-check {
+            font-size: 4rem;
+            color: #10b981;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="main-card">
+    <div id="form-content">
+        <div class="header">
+            <h1>📝 產品評價問卷</h1>
+            <p>您的意見是我們進步的最大動力</p>
+        </div>
+
+        <form id="survey-form">
+            <div class="form-group">
+                <label for="name">您的姓名 / 職稱</label>
+                <input type="text" id="name" name="name" placeholder="例如：開發工程師" required>
+            </div>
+
+            <div class="form-group">
+                <label for="score-value" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                    您對此產品專案的評分
+                    <span id="score-display" style="color:var(--accent); font-size:1.4rem; font-weight:800;">請選擇</span>
+                </label>
+                
+                <!-- Hidden input to store chosen value -->
+                <input type="hidden" id="score" name="score" value="" required>
+                
+                <!-- Segmented Control (Pills) -->
+                <div id="rating-pills" style="display:grid; grid-template-columns:repeat(5, 1fr); gap:12px;">
+                    <button type="button" class="rating-pill" data-value="1">1</button>
+                    <button type="button" class="rating-pill" data-value="2">2</button>
+                    <button type="button" class="rating-pill" data-value="3">3</button>
+                    <button type="button" class="rating-pill" data-value="4">4</button>
+                    <button type="button" class="rating-pill" data-value="5">5</button>
+                    <button type="button" class="rating-pill" data-value="6">6</button>
+                    <button type="button" class="rating-pill" data-value="7">7</button>
+                    <button type="button" class="rating-pill" data-value="8">8</button>
+                    <button type="button" class="rating-pill" data-value="9">9</button>
+                    <button type="button" class="rating-pill" data-value="10">10</button>
+                </div>
+
+                <style>
+                    .rating-pill {
+                        height: 44px;
+                        border: 2px solid #e2e8f0;
+                        background: white;
+                        border-radius: 12px;
+                        font-size: 1rem;
+                        font-weight: 700;
+                        color: #64748b;
+                        cursor: pointer;
+                        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 0;
+                    }
+                    .rating-pill:hover {
+                        border-color: var(--accent);
+                        color: var(--accent);
+                        background: rgba(2, 132, 199, 0.05);
+                        transform: translateY(-2px);
+                    }
+                    .rating-pill.active {
+                        background: var(--accent);
+                        color: white !important;
+                        border-color: var(--accent);
+                        box-shadow: 0 8px 15px -3px rgba(2, 132, 199, 0.4);
+                        transform: scale(1.05);
+                    }
+                    @media (min-width: 400px) {
+                        #rating-pills { grid-template-columns: repeat(10, 1fr); gap: 4px; }
+                        .rating-pill { height: 40px; }
+                    }
+                </style>
+            </div>
+
+            <div class="form-group">
+                <label for="comment">具體評論內容與建議</label>
+                <textarea id="comment" name="comment" placeholder="請輸入您的具體反饋..." required></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submit-btn">
+                <span>提交問卷</span>
+            </button>
+        </form>
+
+        <div class="footer">
+            &copy; 2026 企業 AI 導入與流程數位化評估
+        </div>
+    </div>
+
+    <div id="success-overlay">
+        <div class="icon-check">✓</div>
+        <h2>提交成功！</h2>
+        <p>感謝您的寶貴意見，資料已同步至試算表。</p>
+        <button onclick="location.reload()" class="submit-btn" style="margin-top:30px; background:var(--primary);">
+            填寫下一份
+        </button>
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyPETU6KC83gIIPeb6rLNPLurFOqwp918Sc5Bo59ns9LRYz8VRT_1brprYmLqupXL2_/exec';
+
+    document.getElementById('survey-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('submit-btn');
+        const form = this;
+        const formData = new FormData(form);
+        
+        const data = {
+            name: formData.get('name'),
+            score: formData.get('score'),
+            comment: formData.get('comment')
+        };
+
+        btn.disabled = true;
+        btn.innerHTML = '正在提交...';
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            cache: 'no-cache',
+            body: JSON.stringify(data)
+        })
+        .then(() => {
+            // Since it's no-cors, we assume success IF the promise resolves
+            document.getElementById('form-content').style.display = 'none';
+            document.getElementById('success-overlay').style.display = 'block';
+        })
+        .catch(err => {
+            console.error('Error!', err);
+            alert('提交失敗，請檢查網路連線或稍後再試。');
+            btn.disabled = false;
+            btn.innerHTML = '提交問卷';
+        });
+    });
+
+    // Segmented Rating Logic (Run when DOM is ready)
+    function initRatingSystem() {
+        const pills = document.querySelectorAll('.rating-pill');
+        const scoreInput = document.getElementById('score');
+        const scoreDisplay = document.getElementById('score-display');
+
+        pills.forEach(pill => {
+            pill.addEventListener('click', (e) => {
+                e.preventDefault(); // Extra safety
+                pills.forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+                const val = pill.getAttribute('data-value');
+                scoreInput.value = val;
+                scoreDisplay.textContent = val + ' 分';
+            });
+        });
+    }
+
+    // Initialize
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initRatingSystem);
+    } else {
+        initRatingSystem();
+    }
+</script>
+
+</body>
+</html>
