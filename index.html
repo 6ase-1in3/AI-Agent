@@ -1501,38 +1501,38 @@
             }).join('');
 
             const analysisSectionHTML = `
-            <div style="${sectionWrapperStyle}min-height:420px;margin-bottom:0;">
+            <div style="${sectionWrapperStyle}min-height:500px;margin-bottom:0;">
                 <div style="${labelStripStyle}"><span id="analysis-label-text" style="${labelTextStyle}">分析洞察</span></div>
                 <div style="flex:1;position:relative;display:flex;flex-direction:column;min-width:0;">
+                    <!-- Analysis Content -->
                     <div id="analysis-scroller" style="flex:1;display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;">
                         ${cardHTML || '<div style="padding:40px;color:#94a3b8;">請在 Google Sheet 的 "分析洞察" 分頁填寫內容...</div>'}
                     </div>
-                    <div id="ratings-panel" style="display:none;flex:1;padding:40px;overflow-y:auto;flex-direction:column;gap:48px;background:#fcfcfc;">
-                        <!-- Large QR & Link Row (QR on LEFT) -->
-                        <div style="background:linear-gradient(135deg, #0f172a 0%, #334155 100%); border-radius:32px; padding:60px; color:white; display:flex; align-items:center; gap:80px; box-shadow:0 25px 50px -12px rgba(0,0,0,0.4);">
-                            <!-- QR Code (Blue Zone represented by white container for better scanning) -->
-                            <div style="background:white; padding:20px; border-radius:20px; box-shadow: 0 0 40px rgba(0,0,0,0.2);">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=https://6ase-1in3.github.io/AI-Agent/survey.html" alt="Survey QR" style="display:block; width:280px; height:280px;">
+
+                    <!-- Ratings Content (Side-by-Side Layout) -->
+                    <div id="ratings-panel" style="display:none;flex:1;height:100%;overflow:hidden;background:#f8fafc;">
+                        <!-- Left: QR Code Column -->
+                        <div style="width:380px;background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%);padding:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;border-right:1px solid #e2e8f0;">
+                            <div style="background:white;padding:20px;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,0.3);">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=https://6ase-1in3.github.io/AI-Agent/survey.html" alt="Survey QR" style="display:block;width:260px;height:260px;">
                             </div>
-                            
-                            <div style="flex:1;">
-                                <h3 style="font-size:3.2rem; margin-bottom:24px; font-weight:900; letter-spacing:-1.5px; line-height:1.1;">即時專案滿意度調查</h3>
-                                <div style="display:flex; flex-direction:column; gap:20px;">
-                                    <a href="https://6ase-1in3.github.io/AI-Agent/survey.html" target="_blank" style="display:inline-flex; align-items:center; gap:16px; background:var(--accent); color:white; text-decoration:none; padding:20px 48px; border-radius:16px; font-size:1.6rem; font-weight:900; transition:all 0.3s; box-shadow:0 10px 20px rgba(2, 132, 199, 0.5);" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 15px 30px rgba(2, 132, 199, 0.6)'" onmouseout="this.style.transform='translateY(0)'">
-                                        🔗 開啟問卷網頁
-                                    </a>
-                                    <p style="font-size:1.2rem; opacity:0.6; font-weight:500;">或掃描左方 QR Code 快速加入問卷</p>
-                                </div>
+                            <div style="color:white;text-align:center;">
+                                <h3 style="font-size:1.8rem;margin-bottom:12px;font-weight:900;letter-spacing:-0.5px;">即時評分系統</h3>
+                                <p style="font-size:1rem;opacity:0.7;line-height:1.5;">掃描左方 QR Code<br>立即參與專案評價</p>
+                                <a href="https://6ase-1in3.github.io/AI-Agent/survey.html" target="_blank" style="margin-top:20px;display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:white;text-decoration:none;padding:12px 24px;border-radius:10px;font-size:1.1rem;font-weight:700;transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                                    🔗 開啟問卷網頁
+                                </a>
                             </div>
                         </div>
 
-                        <div style="border-top:2px solid #f1f5f9; padding-top:40px;">
-                            <div style="font-size:1.8rem; font-weight:900; color:var(--primary); margin-bottom:32px; display:flex; align-items:center; gap:16px;">
+                        <!-- Right Column: Historical Comments -->
+                        <div style="flex:1;display:flex;flex-direction:column;padding:40px;overflow-y:auto;background:white;">
+                            <div style="font-size:1.8rem;font-weight:900;color:var(--primary);margin-bottom:32px;display:flex;align-items:center;gap:16px;">
                                 <span style="font-size:2.4rem;">💬</span> 歷史評論與評分紀錄
                             </div>
-                            <div id="ratings-content" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(420px,1fr)); gap:32px;">
-                                <div style="color:#94a3b8; font-size:1.2rem; padding:60px; text-align:center; border:3px dashed #e2e8f0; border-radius:24px; font-weight:600;">
-                                    正在載入 Google 試算表最新的評價...
+                            <div id="ratings-content" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:24px;">
+                                <div style="color:#94a3b8;font-size:1.2rem;padding:60px;text-align:center;border:3px dashed #e2e8f0;border-radius:24px;font-weight:600;">
+                                    正在同步資料中...
                                 </div>
                             </div>
                         </div>
