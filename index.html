@@ -727,7 +727,8 @@
             color: var(--txt-light);
             border-radius: 4px;
             line-height: 1.6;
-            height: 160px; /* Fixed height for roughly 4 lines */
+            height: 160px;
+            /* Fixed height for roughly 4 lines */
             overflow-y: auto;
             white-space: pre-wrap;
             flex-grow: 1;
@@ -1439,10 +1440,10 @@
             let coverSubtitle = '';
 
             if (type === 'database') {
-                coverTitle = '資料庫架構';
+                coverTitle = '<span style="font-size: 1.2rem; opacity: 0.7; display: block; margin-bottom: 8px;">企劃案：</span>資料庫架構';
                 coverSubtitle = '整合 <span style="display:inline-block; background:rgba(96,165,250,0.15); color:#60a5fa; padding:2px 10px; border-radius:6px; border:1px solid rgba(96,165,250,0.3);">內部</span> 與外部數據<br>建構 AI 檢索核心來源';
             } else {
-                coverTitle = type.toUpperCase() + ' 導入流程';
+                coverTitle = `<span style="font-size: 1.2rem; opacity: 0.7; display: block; margin-bottom: 8px;">企劃案：</span>${type.toUpperCase()} 導入流程`;
                 coverSubtitle = '全面數位化升級<br>建構企業專屬知識庫';
             }
 
