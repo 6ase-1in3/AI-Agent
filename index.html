@@ -1480,7 +1480,22 @@
                         <div style="width:100%;height:1px;background:rgba(255,255,255,0.1);margin-bottom:12px;"></div>
                         <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px;"><h3 style="font-size:1.2rem;font-weight:700;color:#94a3b8;margin:0;">工時總覽</h3><label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.9rem;color:#cbd5e1;"><span>排除成本估價</span><div class="summary-toggle" style="position:relative;width:40px;height:22px;background:${ec ? '#34d399' : '#475569'};border-radius:11px;transition:background 0.3s;"><div style="position:absolute;top:2px;left:${ec ? '20px' : '2px'};width:18px;height:18px;background:#fff;border-radius:50%;transition:left 0.3s;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></div></div></label></div>
                         <div style="margin-bottom:4px;"><span style="font-size:2.8rem;font-weight:800;color:#fff;">${tO}h</span><span style="font-size:1.8rem;color:#94a3b8;margin:0 8px;">➜</span><span style="font-size:2.8rem;font-weight:800;color:#34d399;">${tN}h</span><span style="margin-left:12px;font-size:1.2rem;color:#34d399;font-weight:700;">(↓ ${pc}%)</span></div>
-                        <div style="margin:8px 0;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><span style="font-size:0.9rem;color:#f9a8a8;width:50px;">原始</span><div style="flex:1;height:16px;background:rgba(248,113,113,0.5);border-radius:6px;"></div><span style="font-size:0.9rem;color:#fca5a5;width:50px;text-align:right;">${tO}h</span></div><div style="display:flex;align-items:center;gap:10px;"><span style="font-size:0.9rem;color:#6ee7b7;width:50px;">預估</span><div style="flex:1;max-width:${np}%;height:16px;background:rgba(52,211,153,0.7);border-radius:6px;transition:max-width 0.5s;"></div><span style="font-size:0.9rem;color:#6ee7b7;width:50px;text-align:right;">${tN}h</span></div></div>
+                        <div style="margin:8px 0;">
+                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                                <span style="font-size:0.9rem;color:#f9a8a8;width:50px;">原始</span>
+                                <div style="flex:1;height:16px;background:rgba(255,255,255,0.05);border-radius:6px;overflow:hidden;position:relative;">
+                                    <div style="width:100%;height:100%;background:rgba(248,113,113,0.5);border-radius:6px;"></div>
+                                </div>
+                                <span style="font-size:0.9rem;color:#fca5a5;width:50px;text-align:right;">${tO}h</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:10px;">
+                                <span style="font-size:0.9rem;color:#6ee7b7;width:50px;">預估</span>
+                                <div style="flex:1;height:16px;background:rgba(255,255,255,0.05);border-radius:6px;overflow:hidden;position:relative;">
+                                    <div style="width:${np}%;height:100%;background:rgba(52,211,153,0.7);border-radius:6px;transition:width 0.5s;"></div>
+                                </div>
+                                <span style="font-size:0.9rem;color:#6ee7b7;width:50px;text-align:right;">${tN}h</span>
+                            </div>
+                        </div>
                         <div style="color:#e2e8f0;font-size:1.15rem;line-height:1.6;"><p style="margin:0 0 4px 0;">節省工時：<strong style="color:#34d399;">${sv}h</strong></p><p style="margin:0;">效率提升：<strong style="color:#34d399;">${pc}%</strong></p></div>
                         ${coverNote ? `<div style="margin-top:auto;border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;margin-top:20px;"><div style="font-size:0.9rem;color:#94a3b8;min-height:120px;background:rgba(255,255,255,0.05);border-radius:6px;padding:12px;white-space:pre-wrap;">${formatInternalTag(coverNote)}</div></div>` : ''}
                     </div>`;
