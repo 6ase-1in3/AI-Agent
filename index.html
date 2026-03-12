@@ -994,10 +994,11 @@
             <div class="controls">
                 <button class="glossary-btn" onclick="startTour()" title="開始導覽"
                     style="width: auto; padding: 8px 16px; border-radius: 8px; font-weight: 600;">使用教學</button>
-                <button id="btn-schema" class="active" onclick="switchView('schema')">架構：AI 作業模式</button>
-                <button id="btn-database" onclick="switchView('database')">資源層：資料庫</button>
-                <button id="btn-oem" onclick="switchView('oem')">流程層：OEM</button>
-                <button id="btn-odm" onclick="switchView('odm')">流程層：ODM</button>
+                <button id="btn-schema" class="active" onclick="switchView('schema')">架構</button>
+                <button id="btn-database" onclick="switchView('database')">資料庫</button>
+                <button id="btn-oem" onclick="switchView('oem')">OEM 導入</button>
+                <button id="btn-odm" onclick="switchView('odm')">ODM 導入</button>
+                <button id="btn-summary" onclick="switchView('summary')">綜合評價表</button>
                 <button class="comparison-btn" onclick="openComparison()">比較表</button>
                 <button class="glossary-btn" onclick="openGlossary()" title="名詞解釋">?</button>
             </div>
@@ -1094,7 +1095,10 @@
             schema: [],
             database: [],
             oem: [],
-            odm: []
+            odm: [],
+            ratings: [],
+            analysisInsights: [],
+            gsApiUrl: 'https://script.google.com/macros/s/AKfycbyPETU6KC83gIIPeb6rLNPLurFOqwp918Sc5Bo59ns9LRYz8VRT_1brprYmLqupXL2_/exec'
         };
 
         // --- Configuration ---
@@ -1156,13 +1160,15 @@
                 const baseUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
                 const cacheBuster = "&t=" + new Date().getTime();
 
-                const [dbRes, oemRes, odmRes, schemaRes, qaRes, compRes] = await Promise.all([
+                const [dbRes, oemRes, odmRes, schemaRes, qaRes, compRes, ratingsRes, analysisRes] = await Promise.all([
                     fetch(`${baseUrl}&sheet=database${cacheBuster}`),
                     fetch(`${baseUrl}&sheet=oem${cacheBuster}`),
                     fetch(`${baseUrl}&sheet=odm${cacheBuster}`),
                     fetch(`${baseUrl}&sheet=schema${cacheBuster}`),
                     fetch(`${baseUrl}&sheet=qa${cacheBuster}`),
-                    fetch(`${baseUrl}&sheet=比較表${cacheBuster}`)
+                    fetch(`${baseUrl}&sheet=比較表${cacheBuster}`),
+                    fetch(`${baseUrl}&sheet=評分${cacheBuster}`).catch(() => null),
+                    fetch(`${baseUrl}&sheet=分析洞察${cacheBuster}`).catch(() => null)
                 ]);
 
                 if (!dbRes.ok || !schemaRes.ok || !qaRes.ok || !compRes.ok) throw new Error("Need a local server to fetch CSV");
@@ -1180,6 +1186,14 @@
                 store.schema = parseCSV(schemaText);
                 store.qa = parseCSV(qaText);
                 store.comparison = parseCSV(compText);
+                if (ratingsRes && ratingsRes.ok) {
+                    const ratingsText = await ratingsRes.text();
+                    store.ratings = parseCSV(ratingsText);
+                }
+                if (analysisRes && analysisRes.ok) {
+                    const analysisText = await analysisRes.text();
+                    store.analysisInsights = parseCSV(analysisText);
+                }
 
                 // Populate QA Modal
                 if (store.qa && store.qa.length > 1) {
@@ -1386,12 +1400,183 @@
             });
         }
 
+        function renderSummaryView(container, dotsContainer) {
+            // ---------- Financial data (upper half) ----------
+            const exchangeRate = 31;
+            const materialCost = 5000;       // TWD
+            const laborHourCost = 1310;      // TWD / 單位人工成本
+            const fob = 220;                 // USD
+            const annualVolume = 10000;
+            const cogs = Math.round((materialCost + laborHourCost) / exchangeRate * 100) / 100;
+            const contribution = Math.round((fob - cogs) * 100) / 100;
+            const contributionRate = Math.round(contribution / fob * 100);
+            const grossProfit = contribution;
+            const grossMargin = contributionRate;
+            const moldCost = 5000000;        // TWD
+
+            const financialData = [
+                {label:'匯率', val:exchangeRate, color:'#475569'},
+                {label:'材料成本', val:`${materialCost.toLocaleString()} TWD`, color:'#475569'},
+                {label:'工時成本', val:`${laborHourCost.toLocaleString()} TWD`, color:'#475569'},
+                {label:'COGS', val:`${cogs} USD`, color:'#ea580c'},
+                {label:'FOB 報價', val:`${fob} USD`, color:'#059669'},
+                {label:'年量', val:`${annualVolume.toLocaleString()} 台`, color:'#0284c7'},
+                {label:'邊貢率', val:`${contributionRate}%`, color:'#16a34a'},
+                {label:'毛利率', val:`${grossMargin}%`, color:'#16a34a'},
+                {label:'模具費用', val:`${(moldCost/10000).toFixed(0)}萬 TWD`, color:'#dc2626'},
+            ];
+
+            const sectionWrapperStyle = "display:flex;margin-bottom:24px;background:#fff;border-radius:16px;border:1px solid var(--border-color);overflow:hidden;";
+            const labelStripStyle = "flex-shrink:0;width:52px;background:#f1f5f9;border-right:1px solid var(--border-color);display:flex;align-items:center;justify-content:center;padding:12px 0;";
+            const labelTextStyle = "writing-mode:vertical-rl;font-size:0.85rem;font-weight:800;color:#64748b;letter-spacing:4px;text-transform:uppercase;";
+            const contentPaneStyle = "flex:1;padding:24px;position:relative;display:flex;flex-direction:column;justify-content:center;min-width:0;";
+
+            const productInfoHTML = `
+            <div style="${sectionWrapperStyle}min-height:110px;">
+                <div style="${labelStripStyle}"><span style="${labelTextStyle}">產品資訊</span></div>
+                <div style="${contentPaneStyle}">
+                    <div style="font-size:1.8rem;font-weight:800;color:var(--primary)">喬山 Matrix 家用電動重訓機</div>
+                    <div style="font-size:1.05rem;color:var(--secondary);margin-top:6px;">合作模式：<strong>OEM（委託製造）</strong>｜合作夥伴：喬山健康科技</div>
+                    
+                    <button id="btn-toggle-ratings"
+                        style="position:absolute;top:50%;right:24px;transform:translateY(-50%);background:var(--primary);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:0.9rem;font-weight:600;cursor:pointer;transition:opacity .2s;"
+                        onmouseenter="this.style.opacity='.85'" onmouseleave="this.style.opacity='1'"
+                        onclick="const rp=document.getElementById('ratings-panel'); const asc=document.getElementById('analysis-scroller'); const alt=document.getElementById('analysis-label-text'); const dots=document.getElementById('analysis-dots');
+                            if(rp.style.display === 'none'){
+                                rp.style.display='block'; asc.style.display='none'; alt.textContent='評分紀錄'; this.textContent='← 返回分析'; dots.style.opacity='0';
+                            } else {
+                                rp.style.display='none'; asc.style.display='flex'; alt.textContent='分析洞察'; this.textContent='📊 評分系統與評論紀錄'; dots.style.opacity='1';
+                            }">
+                        📊 評分系統與評論紀錄
+                    </button>
+                </div>
+            </div>`;
+
+            const financialHTML = `
+            <div style="${sectionWrapperStyle}min-height:100px;">
+                <div style="${labelStripStyle}"><span style="${labelTextStyle}">效益總覽</span></div>
+                <div style="${contentPaneStyle}padding:0;">
+                    <table style="width:100%;border-collapse:collapse;table-layout:fixed;height:100%;">
+                        <thead>
+                            <tr style="background:#f8fafc;border-bottom:1px solid #e2e8f0;">
+                                ${financialData.map((d,idx) => `<th style="padding:10px;font-size:0.75rem;color:#94a3b8;font-weight:700;text-align:center;border-right:${idx===financialData.length-1?'none':'1px solid #e2e8f0'};text-transform:uppercase;">${d.label}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                ${financialData.map((d,idx) => `<td style="padding:14px 10px;font-size:1.1rem;font-weight:800;color:${d.color};text-align:center;border-right:${idx===financialData.length-1?'none':'1px solid #e2e8f0'}">${d.val}</td>`).join('')}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>`;
+
+            // Analysis rows
+            const rawAnalysis = store.analysisInsights || [];
+            const analysisRows = rawAnalysis.slice(1);
+            
+            const cardHTML = analysisRows.map((r, idx) => {
+                if(!r[0]) return '';
+                const group = r[0]; 
+                const badge = r[1] || '';
+                const icon = r[2] || '📊';
+                const body = (r[3] || '').replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                
+                const isInternal = group.includes('內部');
+                const accentColor = isInternal ? '#0284c7' : '#db2777';
+                const lightColor = isInternal ? '#f0f9ff' : '#fdf2f8';
+                const borderRight = idx === analysisRows.length - 1 ? 'none' : '1px solid #e2e8f0';
+
+                return `
+                <div style="flex-shrink:0;width:450px;border-right:${borderRight};display:flex;flex-direction:column;">
+                    <div style="background:${lightColor};padding:14px 24px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:12px;">
+                         <span style="font-size:1.6rem;">${icon}</span>
+                         <div>
+                            <div style="font-size:0.75rem;color:${accentColor};font-weight:700;text-transform:uppercase;letter-spacing:1px;">${group}</div>
+                            <div style="font-size:1.1rem;font-weight:800;color:var(--primary);">${badge}</div>
+                         </div>
+                    </div>
+                    <div style="padding:24px;font-size:1.05rem;color:var(--txt-body);line-height:1.7;overflow-y:auto;flex:1;">${body}</div>
+                </div>`;
+            }).join('');
+
+            const analysisSectionHTML = `
+            <div style="${sectionWrapperStyle}min-height:420px;margin-bottom:0;">
+                <div style="${labelStripStyle}"><span id="analysis-label-text" style="${labelTextStyle}">分析洞察</span></div>
+                <div style="flex:1;position:relative;display:flex;flex-direction:column;min-width:0;">
+                    <div id="analysis-scroller" style="flex:1;display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;">
+                        ${cardHTML || '<div style="padding:40px;color:#94a3b8;">請在 Google Sheet 的 "分析洞察" 分頁填寫內容...</div>'}
+                    </div>
+                    <div id="ratings-panel" style="display:none;flex:1;padding:24px;overflow-y:auto;">
+                        <div id="ratings-content" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;">
+                            <div style="color:#94a3b8;font-size:0.95rem;">載入評分資料中...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'width:100%;height:100%;display:flex;flex-direction:column;overflow-y:auto;padding:24px;';
+            wrapper.innerHTML = `
+                <div id="summary-main-content">
+                    ${productInfoHTML}
+                    ${financialHTML}
+                    ${analysisSectionHTML}
+                </div>`;
+            container.appendChild(wrapper);
+
+            renderRatings();
+        }
+
+        function renderRatings() {
+            const panel = document.getElementById('ratings-content');
+            if (!panel) return;
+            const data = store.ratings;
+            if (!data || data.length < 2) {
+                panel.innerHTML = '<div style="color:#94a3b8;font-size:0.95rem;">尚無評分資料，或評分分頁尚未設定。</div>';
+                return;
+            }
+            const rows = data.slice(1);
+            const stars = n => {
+                const s = parseFloat(n) || 0;
+                const full = Math.round(s);
+                return Array.from({length:5}, (_,i) =>
+                    `<span style="color:${i<full?'#f59e0b':'#cbd5e1'};font-size:1.2rem;">★</span>`).join('');
+            };
+            panel.innerHTML = rows.map(r => {
+                if (!r[0] && !r[1]) return '';
+                const reviewer = r[0] || '匿名';
+                const score = r[1] || '-';
+                const comment = (r[2] || '').replace(/\n/g, '<br>');
+                return `<div style="background:#fff;border-radius:12px;border:1px solid var(--border-color);padding:18px;display:flex;flex-direction:column;gap:8px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <div style="font-weight:700;color:var(--primary);">${reviewer}</div>
+                        <div style="font-size:1.4rem;font-weight:800;color:#f59e0b;">${score}</div>
+                    </div>
+                    <div>${stars(score)}</div>
+                    <div style="font-size:0.9rem;color:#475569;line-height:1.6;">${comment || '<span style="color:#cbd5e1">無評論</span>'}</div>
+                </div>`;
+            }).join('') || '<div style="color:#94a3b8;">尚無有效評分資料。</div>';
+        }
+
+
         function switchView(type) {
             document.querySelectorAll('.controls button').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('btn-' + type).classList.add('active');
+            const activeBtn = document.getElementById('btn-' + type);
+            if (activeBtn) activeBtn.classList.add('active');
 
             const container = document.getElementById('scroll-container');
             container.innerHTML = '';
+
+            if (type === 'summary') {
+                container.style.transform = 'none';
+                container.style.scrollSnapType = 'none';
+                container.style.overflowX = 'hidden';
+                const dotsContainer = document.getElementById('dots-container');
+                dotsContainer.innerHTML = '';
+                renderSummaryView(container, dotsContainer);
+                return;
+            }
 
             // Reset scrolling transform if we are coming back to schema
             if (type === 'schema') {
