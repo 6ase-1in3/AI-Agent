@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 撠?? Gallery</title>
+    <title>AI 導入情況 Gallery</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/css/shepherd.css" />
     <style>
         :root {
@@ -497,7 +497,7 @@
         }
 
         .data-list li::before {
-            content: "??;
+            content: "▶";
             /* Changed to appropriate modern symbol */
             position: absolute;
             left: 0;
@@ -912,7 +912,7 @@
 
         /* ---------------------------------- */
 
-        /* Dot Navigation styling ??Apple pill style */
+        /* Dot Navigation styling — Apple pill style */
         .dots-container {
             display: flex;
             justify-content: center;
@@ -990,16 +990,16 @@
 <body>
     <div class="workspace">
         <div class="header">
-            <h1>隡平 AI 撠??蝔雿?閰摯</h1>
+            <h1>企業 AI 導入與流程數位化評估</h1>
             <div class="controls">
-                <button class="glossary-btn" onclick="startTour()" title="??撠汗"
-                    style="width: auto; padding: 8px 16px; border-radius: 8px; font-weight: 600;">雿輻?飛</button>
-                <button id="btn-schema" class="active" onclick="switchView('schema')">?嗆?嚗I 雿平璅∪?</button>
-                <button id="btn-database" onclick="switchView('database')">鞈?撅歹?鞈?摨?/button>
-                <button id="btn-oem" onclick="switchView('oem')">瘚?撅歹?OEM</button>
-                <button id="btn-odm" onclick="switchView('odm')">瘚?撅歹?ODM</button>
-                <button class="comparison-btn" onclick="openComparison()">瘥?銵?/button>
-                <button class="glossary-btn" onclick="openGlossary()" title="??閫??">?</button>
+                <button class="glossary-btn" onclick="startTour()" title="開始導覽"
+                    style="width: auto; padding: 8px 16px; border-radius: 8px; font-weight: 600;">使用教學</button>
+                <button id="btn-schema" class="active" onclick="switchView('schema')">架構：AI 作業模式</button>
+                <button id="btn-database" onclick="switchView('database')">資源層：資料庫</button>
+                <button id="btn-oem" onclick="switchView('oem')">流程層：OEM</button>
+                <button id="btn-odm" onclick="switchView('odm')">流程層：ODM</button>
+                <button class="comparison-btn" onclick="openComparison()">比較表</button>
+                <button class="glossary-btn" onclick="openGlossary()" title="名詞解釋">?</button>
             </div>
         </div>
 
@@ -1012,13 +1012,13 @@
             </div>
         </div>
 
-        <div class="loading-overlay" id="loading">霈???葉嚗?蝔?..</div>
+        <div class="loading-overlay" id="loading">讀取資料中，請稍候...</div>
 
         <!-- Glossary Modal -->
         <div class="modal-overlay" id="glossary-modal" onclick="closeGlossary(event)">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <div class="modal-header">
-                    <h2 class="modal-title">AI 蝟餌絞??閫?? (?質店??)</h2>
+                    <h2 class="modal-title">AI 系統名詞解釋 (白話文版)</h2>
                     <button class="modal-close" onclick="closeGlossary()">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -1032,19 +1032,19 @@
     <div class="modal-overlay" id="comparison-modal" onclick="closeComparison(event)">
         <div class="modal-content" onclick="event.stopPropagation()" style="width: 1200px; max-width: 95%;">
             <div class="modal-header">
-                <h2 class="modal-title">AI 撠???? - ?寞?瘥?銵?/h2>
+                <h2 class="modal-title">AI 導入前期提要 - 方案比較表</h2>
                 <button class="modal-close" onclick="closeComparison()">&times;</button>
             </div>
             <div id="modal-body" class="modal-body" style="padding: 0;">
                 <table class="compare-table">
                     <thead>
                         <tr>
-                            <th>閰摯?</th>
-                            <th>憭 AI<br><span style="font-size:0.9rem;font-weight:600;color:var(--secondary)">?脩垢 API
-                                    璅∪?</span></th>
-                            <th>?啁垢 / ?折 AI<br><span
-                                    style="font-size:0.9rem;font-weight:600;color:var(--secondary)">蝘???璅∪?</span></th>
-                            <th>撠????AI<br><span style="font-size:0.9rem;font-weight:600;color:var(--secondary)">?孵?頠?
+                            <th>評估項目</th>
+                            <th>外部 AI<br><span style="font-size:0.9rem;font-weight:600;color:var(--secondary)">雲端 API
+                                    模型</span></th>
+                            <th>地端 / 內部 AI<br><span
+                                    style="font-size:0.9rem;font-weight:600;color:var(--secondary)">私有開源模型</span></th>
+                            <th>專用分析型 AI<br><span style="font-size:0.9rem;font-weight:600;color:var(--secondary)">特化軟體
                                     (CAE/CAD)</span></th>
                         </tr>
                     </thead>
@@ -1162,7 +1162,7 @@
                     fetch(`${baseUrl}&sheet=odm${cacheBuster}`),
                     fetch(`${baseUrl}&sheet=schema${cacheBuster}`),
                     fetch(`${baseUrl}&sheet=qa${cacheBuster}`),
-                    fetch(`${baseUrl}&sheet=瘥?銵?{cacheBuster}`)
+                    fetch(`${baseUrl}&sheet=比較表${cacheBuster}`)
                 ]);
 
                 if (!dbRes.ok || !schemaRes.ok || !qaRes.ok || !compRes.ok) throw new Error("Need a local server to fetch CSV");
@@ -1214,7 +1214,7 @@
 
                     // 3. Build Header HTML
                     let theadHTML = '<tr>';
-                    let h0 = headers[0] || '閰摯?';
+                    let h0 = headers[0] || '評估項目';
                     theadHTML += `<th>${h0}</th>`;
                     for (let i = 1; i < colCount; i++) {
                         theadHTML += `<th>${headers[i] || ''}</th>`;
@@ -1241,7 +1241,7 @@
                                 if (val === '10') style = 'style="color:#10b981;border-color:#a7f3d0;background:#ecfdf5"';
                                 else if (val === '0' || val === '-') style = 'style="color:var(--txt-light);border-color:#e2e8f0;background:#f8fafc"';
 
-                                let isLong = val.length > 8 || /[^\d\-\.\,]/.test(val) || val.includes('??) || val.includes('TWD');
+                                let isLong = val.length > 8 || /[^\d\-\.\,]/.test(val) || val.includes('萬') || val.includes('TWD');
                                 let longClass = isLong ? 'long-text' : '';
                                 return `<div class="score-val ${longClass}" ${style}>${val}</div>`;
                             });
@@ -1260,7 +1260,7 @@
                 document.getElementById('loading').style.display = 'none';
                 switchView('schema');
             } catch (err) {
-                document.getElementById('loading').innerHTML = '霈??CSV 憭望???br>隢Ⅱ隤璈撩?撌脣???;
+                document.getElementById('loading').innerHTML = '讀取 CSV 失敗。<br>請確認本機伺服器已啟動。';
                 console.error(err);
             }
         }
@@ -1278,9 +1278,9 @@
 
         function formatInternalTag(str) {
             if (!str) return str;
-            // If item contains (?折), strip the text and color the entire name blue
-            if (str.includes('(?折)')) {
-                const cleanName = str.replace(/\(?折\)/g, '').trim();
+            // If item contains (內部), strip the text and color the entire name blue
+            if (str.includes('(內部)')) {
+                const cleanName = str.replace(/\(內部\)/g, '').trim();
                 return '<span style="color:#0284c7; font-weight:700;">' + cleanName + '</span>';
             }
             return str;
@@ -1289,16 +1289,16 @@
         function formatRoleTags(str) {
             if (!str) return str;
 
-            // Format ?折璅∪? / 憭璅∪? / 鈭?/ 蝔? / ?折 into badges
+            // Format 內部模型 / 外部模型 / 人 / 程式 / 內部 into badges
             let formatted = str;
-            formatted = formatted.replace(/(?折璅∪??拇?)\s*([0-9]{1,3}%)/g, '<span style="display:inline-block; margin-right:6px; background:#F0FDF4; color:#15803D; padding:4px 8px; border-radius:4px; font-weight:700; border:1px solid #BBF7D0;">$1 $2</span>');
-            formatted = formatted.replace(/(?折璅∪?)\s*([0-9]{1,3}%)/g, '<span style="display:inline-block; margin-right:6px; background:#F0FDF4; color:#15803D; padding:4px 8px; border-radius:4px; font-weight:700; border:1px solid #BBF7D0;">$1 $2</span>');
-            formatted = formatted.replace(/(?折)\s*([0-9]{1,3}%)/g, '<span style="display:inline-block; margin-right:6px; background:#F0FDF4; color:#15803D; padding:4px 8px; border-radius:4px; font-weight:700; border:1px solid #BBF7D0;">$1 $2</span>');
-            formatted = formatted.replace(/(鈭?\s*([0-9]{1,3}%)/g, '<span style="display:inline-block; margin-right:6px; background:#FEF2F2; color:#B91C1C; padding:4px 8px; border-radius:4px; font-weight:700; border:1px solid #FECACA;">$1??$2</span>');
-            formatted = formatted.replace(/(憭璅∪?)\s*([0-9]{1,3}%)/g, '<span style="display:inline-block; margin-right:6px; background:#FDF2F8; color:#BE185D; padding:4px 8px; border-radius:4px; font-weight:700; border:1px solid #FBCFE8;">$1 $2</span>');
+            formatted = formatted.replace(/(內部模型助手)\s*([0-9]{1,3}%)/g, '<span style="display:inline-block; margin-right:6px; background:#F0FDF4; color:#15803D; padding:4px 8px; border-radius:4px; font-weight:700; border:1px solid #BBF7D0;">$1 $2</span>');
+            formatted = formatted.replace(/(內部模型)\s*([0-9]{1,3}%)/g, '<span style="display:inline-block; margin-right:6px; background:#F0FDF4; color:#15803D; padding:4px 8px; border-radius:4px; font-weight:700; border:1px solid #BBF7D0;">$1 $2</span>');
+            formatted = formatted.replace(/(內部)\s*([0-9]{1,3}%)/g, '<span style="display:inline-block; margin-right:6px; background:#F0FDF4; color:#15803D; padding:4px 8px; border-radius:4px; font-weight:700; border:1px solid #BBF7D0;">$1 $2</span>');
+            formatted = formatted.replace(/(人)\s*([0-9]{1,3}%)/g, '<span style="display:inline-block; margin-right:6px; background:#FEF2F2; color:#B91C1C; padding:4px 8px; border-radius:4px; font-weight:700; border:1px solid #FECACA;">$1員 $2</span>');
+            formatted = formatted.replace(/(外部模型)\s*([0-9]{1,3}%)/g, '<span style="display:inline-block; margin-right:6px; background:#FDF2F8; color:#BE185D; padding:4px 8px; border-radius:4px; font-weight:700; border:1px solid #FBCFE8;">$1 $2</span>');
 
-            // remove separators (??and +) since they are badges now
-            formatted = formatted.replace(/[??]/g, ' ');
+            // remove separators (、 and +) since they are badges now
+            formatted = formatted.replace(/[、+]/g, ' ');
 
             // Re-apply original block logic
             if (formatted.includes('[')) {
@@ -1314,9 +1314,9 @@
             const rows = data.slice(1);
 
             const schemaIcons = {
-                '鞈?摨?: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>',
-                '憭扯': '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>',
-                '蝔?': '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline><line x1="14" y1="4" x2="10" y2="20"></line></svg>'
+                '資料庫': '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>',
+                '大腦': '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>',
+                '程式': '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline><line x1="14" y1="4" x2="10" y2="20"></line></svg>'
             };
 
             const schemaData = rows.map(r => {
@@ -1434,16 +1434,16 @@
             let coverSubtitle = '';
 
             if (type === 'database') {
-                coverTitle = '鞈?摨急瑽?;
-                coverSubtitle = '?游? <span style="display:inline-block; background:rgba(96,165,250,0.15); color:#60a5fa; padding:2px 10px; border-radius:6px; border:1px solid rgba(96,165,250,0.3);">?折</span> ???冽??br>撱箸? AI 瑼Ｙ揣?詨?靘?';
+                coverTitle = '<span style="font-size: 1.2rem; opacity: 0.7; display: block; margin-bottom: 8px;">企劃案</span>資料庫架構';
+                coverSubtitle = '整合 <span style="display:inline-block; background:rgba(96,165,250,0.15); color:#60a5fa; padding:2px 10px; border-radius:6px; border:1px solid rgba(96,165,250,0.3);">內部</span> 與外部數據<br>建構 AI 檢索核心來源';
             } else {
-                coverTitle = type.toUpperCase() + ' 撠瘚?';
-                coverSubtitle = '?券?訾???蝝?br>撱箸?隡平撠惇?亥?摨?;
+                coverTitle = `<span style="font-size: 1.2rem; opacity: 0.7; display: block; margin-bottom: 8px;">企劃案</span>${type.toUpperCase()} 導入流程`;
+                coverSubtitle = '全面數位化升級<br>建構企業專屬知識庫';
             }
-            const noteIndex = headers.indexOf('?酉');
+            const noteIndex = headers.indexOf('備註');
             let coverNote = ''; // Default fallback
             rows.forEach((r) => {
-                if (r[0] && r[0].trim() === '撠?酉') {
+                if (r[0] && r[0].trim() === '封面備註') {
                     // Try to find it at noteIndex, or if it's placed earlier because of empty columns
                     let val = null;
                     if (noteIndex !== -1 && r[noteIndex]) val = r[noteIndex];
@@ -1467,21 +1467,21 @@
             if (type !== 'database') {
                 let totalOld = 0, totalNew = 0, totalOldNoEst = 0, totalNewNoEst = 0;
                 rows.forEach((r) => {
-                    if (!r[0] || r[0].trim() === '' || r[0].trim() === '撠?酉') return;
-                    const o = parseFloat(r[headers.indexOf('??撌交?')] || '0'), n = parseFloat(r[headers.indexOf('?摯撌交?')] || '0');
+                    if (!r[0] || r[0].trim() === '' || r[0].trim() === '封面備註') return;
+                    const o = parseFloat(r[headers.indexOf('原始工時')] || '0'), n = parseFloat(r[headers.indexOf('預估工時')] || '0');
                     totalOld += o;
                     totalNew += n;
-                    if (!r[0].includes('?隡啣')) { totalOldNoEst += o; totalNewNoEst += n; }
+                    if (!r[0].includes('成本估價')) { totalOldNoEst += o; totalNewNoEst += n; }
                 });
                 function renderCS(ec) {
                     const tO = Math.round(ec ? totalOldNoEst : totalOld), tN = Math.round(ec ? totalNewNoEst : totalNew), sv = tO - tN, pc = tO ? Math.round(sv / tO * 100) : 0, np = tO > 0 ? (tN / tO * 100) : 0;
                     return `<div class="card cover-card" style="align-items:stretch;text-align:left;padding:24px;">
                         <div style="margin-bottom:4px;"><h2 class="cover-title" style="margin-bottom:4px;text-align:left;">${coverTitle}</h2><p class="cover-subtitle" style="text-align:left;padding:0;margin-bottom:8px;">${coverSubtitle}</p></div>
                         <div style="width:100%;height:1px;background:rgba(255,255,255,0.1);margin-bottom:12px;"></div>
-                        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px;"><h3 style="font-size:1.2rem;font-weight:700;color:#94a3b8;margin:0;">撌交?蝮質汗</h3><label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.9rem;color:#cbd5e1;"><span>??隡啣</span><div class="summary-toggle" style="position:relative;width:40px;height:22px;background:${ec ? '#34d399' : '#475569'};border-radius:11px;transition:background 0.3s;"><div style="position:absolute;top:2px;left:${ec ? '20px' : '2px'};width:18px;height:18px;background:#fff;border-radius:50%;transition:left 0.3s;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></div></div></label></div>
-                        <div style="margin-bottom:4px;"><span style="font-size:2.8rem;font-weight:800;color:#fff;">${tO}h</span><span style="font-size:1.8rem;color:#94a3b8;margin:0 8px;">??/span><span style="font-size:2.8rem;font-weight:800;color:#34d399;">${tN}h</span><span style="margin-left:12px;font-size:1.2rem;color:#34d399;font-weight:700;">(??${pc}%)</span></div>
-                        <div style="margin:8px 0;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><span style="font-size:0.9rem;color:#f9a8a8;width:50px;">??</span><div style="flex:1;height:16px;background:rgba(248,113,113,0.5);border-radius:6px;"></div><span style="font-size:0.9rem;color:#fca5a5;width:50px;text-align:right;">${tO}h</span></div><div style="display:flex;align-items:center;gap:10px;"><span style="font-size:0.9rem;color:#6ee7b7;width:50px;">?摯</span><div style="flex:1;max-width:${np}%;height:16px;background:rgba(52,211,153,0.7);border-radius:6px;transition:max-width 0.5s;"></div><span style="font-size:0.9rem;color:#6ee7b7;width:50px;text-align:right;">${tN}h</span></div></div>
-                        <div style="color:#e2e8f0;font-size:1.15rem;line-height:1.6;"><p style="margin:0 0 4px 0;">蝭?極??<strong style="color:#34d399;">${sv}h</strong></p><p style="margin:0;">????嚗?strong style="color:#34d399;">${pc}%</strong></p></div>
+                        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px;"><h3 style="font-size:1.2rem;font-weight:700;color:#94a3b8;margin:0;">工時總覽</h3><label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.9rem;color:#cbd5e1;"><span>排除成本估價</span><div class="summary-toggle" style="position:relative;width:40px;height:22px;background:${ec ? '#34d399' : '#475569'};border-radius:11px;transition:background 0.3s;"><div style="position:absolute;top:2px;left:${ec ? '20px' : '2px'};width:18px;height:18px;background:#fff;border-radius:50%;transition:left 0.3s;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></div></div></label></div>
+                        <div style="margin-bottom:4px;"><span style="font-size:2.8rem;font-weight:800;color:#fff;">${tO}h</span><span style="font-size:1.8rem;color:#94a3b8;margin:0 8px;">➜</span><span style="font-size:2.8rem;font-weight:800;color:#34d399;">${tN}h</span><span style="margin-left:12px;font-size:1.2rem;color:#34d399;font-weight:700;">(↓ ${pc}%)</span></div>
+                        <div style="margin:8px 0;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><span style="font-size:0.9rem;color:#f9a8a8;width:50px;">原始</span><div style="flex:1;height:16px;background:rgba(248,113,113,0.5);border-radius:6px;"></div><span style="font-size:0.9rem;color:#fca5a5;width:50px;text-align:right;">${tO}h</span></div><div style="display:flex;align-items:center;gap:10px;"><span style="font-size:0.9rem;color:#6ee7b7;width:50px;">預估</span><div style="flex:1;max-width:${np}%;height:16px;background:rgba(52,211,153,0.7);border-radius:6px;transition:max-width 0.5s;"></div><span style="font-size:0.9rem;color:#6ee7b7;width:50px;text-align:right;">${tN}h</span></div></div>
+                        <div style="color:#e2e8f0;font-size:1.15rem;line-height:1.6;"><p style="margin:0 0 4px 0;">節省工時：<strong style="color:#34d399;">${sv}h</strong></p><p style="margin:0;">效率提升：<strong style="color:#34d399;">${pc}%</strong></p></div>
                         ${coverNote ? `<div style="margin-top:auto;border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;margin-top:20px;"><div style="font-size:0.9rem;color:#94a3b8;min-height:120px;background:rgba(255,255,255,0.05);border-radius:6px;padding:12px;white-space:pre-wrap;">${formatInternalTag(coverNote)}</div></div>` : ''}
                     </div>`;
                 }
@@ -1512,8 +1512,8 @@
                     const listItems = listItemsText.split('|').filter(s => s.trim().length > 0);
                     const ulHTML = listItems.map(item => '<li>' + formatInternalTag(item.trim()) + '</li>').join('');
 
-                    const annotationIdx = headers.indexOf('?酉');
-                    let annotation = (annotationIdx !== -1 && row[annotationIdx]) ? row[annotationIdx] : '?酉嚗迨?憛隡平?折?亥??詨?嚗?摰????湔嚗誑蝣箔? AI 瑼Ｙ揣璅∪?銋?蝣箏漲??;
+                    const annotationIdx = headers.indexOf('備註');
+                    let annotation = (annotationIdx !== -1 && row[annotationIdx]) ? row[annotationIdx] : '備註：此區塊為企業內部知識核心，需定期排程更新，以確保 AI 檢索模型之準確度。';
                     annotation = annotation.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
                     cardInnerHTML =
@@ -1529,30 +1529,30 @@
                         '<div class="card-annotation" contenteditable="true">' + annotation + '</div>' +
                         '</div>';
                 } else {
-                    const timeOld = parseFloat(row[headers.indexOf('??撌交?')] || '0');
-                    const timeNew = parseFloat(row[headers.indexOf('?摯撌交?')] || '0');
+                    const timeOld = parseFloat(row[headers.indexOf('原始工時')] || '0');
+                    const timeNew = parseFloat(row[headers.indexOf('預估工時')] || '0');
                     const diff = timeOld - timeNew;
                     const diffPercent = timeOld !== 0 ? Math.round((diff / timeOld) * 100) : 0;
 
-                    const badge = '?挾 ' + (index + 1);
-                    const descHTML = '撌交??摯嚗? + timeOld + 'h ??' + timeNew + 'h <span style="color:#059669; font-weight:700;">(??' + diffPercent + '%)</span>';
+                    const badge = '階段 ' + (index + 1);
+                    const descHTML = '工時預估：' + timeOld + 'h ➔ ' + timeNew + 'h <span style="color:#059669; font-weight:700;">(↓ ' + diffPercent + '%)</span>';
 
                     let dataRowsHTML = '';
 
                     for (let i = 1; i < headers.length; i++) {
                         const h = headers[i];
                         // Skip system columns or empty header tags completely
-                        if (!h || h.trim() === '' || h === '?挾?迂' || h === '??撌交?' || h === '?摯撌交?' || h === '?酉' || h === '撠?酉') continue;
+                        if (!h || h.trim() === '' || h === '階段名稱' || h === '原始工時' || h === '預估工時' || h === '備註' || h === '封面備註') continue;
 
                         let val = row[i];
                         let valClass = 'row-value';
 
                         if (!val || val.trim() === '' || val.trim().toUpperCase() === 'X') {
-                            val = '??;
+                            val = '無';
                             valClass += ' empty';
                         } else {
-                            if (h === 'AI?Ｗ' || h.includes('?憛?)) valClass += ' highlight';
-                            if (h === '蝔???' || h === '雿平??) valClass += ' accent';
+                            if (h === 'AI產出' || h.includes('區塊')) valClass += ' highlight';
+                            if (h === '程式處理' || h === '作業員') valClass += ' accent';
                         }
 
                         let formattedVal = val;
@@ -1565,7 +1565,7 @@
                             '</div>';
                     }
 
-                    const annotationIdx = headers.indexOf('?酉');
+                    const annotationIdx = headers.indexOf('備註');
                     let annotation = (annotationIdx !== -1 && row[annotationIdx]) ? row[annotationIdx].trim() : '';
                     annotation = annotation.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
@@ -1725,44 +1725,44 @@
             });
 
             tour.addStep({
-                title: '甇∟?靘 AI 撠??撅內',
-                text: '?銝?敺垢??撅內獢???翰??閫??銝頂蝯梁????孵???,
+                title: '歡迎來到 AI 導入情況展示',
+                text: '這是一個無後端的純展示框架。讓我們快速了解一下這個系統的操作方式。',
                 attachTo: { element: '.header h1', on: 'bottom' },
                 buttons: [
-                    { action: tour.next, text: '銝?甇? }
+                    { action: tour.next, text: '下一步' }
                 ],
                 id: 'welcome'
             });
 
             tour.addStep({
-                title: '??閬? (蝬剖漲)',
-                text: '雿隞仿??ㄐ嚗??瑽?璅∪?)???澈(靘?)?誑?EM/ODM??蝔?????,
+                title: '切換視角 (維度)',
+                text: '你可以點擊這裡，隨時在【架構(模式)】、【資料庫(來源)】、以及【OEM/ODM】流程間切換。',
                 attachTo: { element: '.controls', on: 'bottom' },
                 buttons: [
-                    { action: tour.back, classes: 'shepherd-button-secondary', text: '銝?甇? },
-                    { action: tour.next, text: '銝?甇? }
+                    { action: tour.back, classes: 'shepherd-button-secondary', text: '上一步' },
+                    { action: tour.next, text: '下一步' }
                 ],
                 id: 'views'
             });
 
             tour.addStep({
-                title: '??閫??',
-                text: '????? AI 暺店??暺??喲???[?] ?臭誑????閫???Ｘ??,
-                attachTo: { element: 'button[title="??閫??"]', on: 'left' },
+                title: '名詞解釋',
+                text: '遇到看不懂的 AI 黑話嗎？點擊右邊的 [?] 可以開啟名詞解釋面板。',
+                attachTo: { element: 'button[title="名詞解釋"]', on: 'left' },
                 buttons: [
-                    { action: tour.back, classes: 'shepherd-button-secondary', text: '銝?甇? },
-                    { action: tour.next, text: '銝?甇? }
+                    { action: tour.back, classes: 'shepherd-button-secondary', text: '上一步' },
+                    { action: tour.next, text: '下一步' }
                 ],
                 id: 'glossary'
             });
 
             tour.addStep({
-                title: '???Ｙ揣',
-                text: '?曉嚗?雿輻??曌遝頛芥?暺????孵?暺??典???忽璇剖嚗?,
+                title: '開始探索',
+                text: '現在，請使用【滑鼠滾輪】或點擊【下方圓點】來在卡片之間穿梭吧！',
                 attachTo: { element: '.gallery-wrapper', on: 'top' },
                 buttons: [
-                    { action: tour.back, classes: 'shepherd-button-secondary', text: '銝?甇? },
-                    { action: tour.complete, text: '摰?撠汗' }
+                    { action: tour.back, classes: 'shepherd-button-secondary', text: '上一步' },
+                    { action: tour.complete, text: '完成導覽' }
                 ],
                 id: 'enjoy'
             });
